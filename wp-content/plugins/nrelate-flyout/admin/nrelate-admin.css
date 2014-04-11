@@ -14,7 +14,7 @@
 	}
 
 h2.nrelate-title {
-	height: 60px;
+	height: auto;
 	}
 
 h2.nrelate-title a {
@@ -155,7 +155,6 @@ h2.nrelate-title a {
 	border-color:#DDDDDD #505050 #505050 #DDDDDD;
 	color:#FFF;
 	}
-
  
 /* = nRelate Settings Pages
 ----------------------------------------------- */
@@ -163,6 +162,7 @@ h2.nrelate-title a {
 	float: left;
 	position: relative;
 	width: 220px;
+	padding-left: 10px;
 	}
 .nrelate-settings .form-table td {
 	float: left;
@@ -239,6 +239,9 @@ padding: 4px 20px 6px;
 	padding: 1%;
 	margin:0 0 10px;
 	}
+.nrelate-settings .form-table img {
+	width: 100%;
+}
 .nrelate-settings #imagesizepreview select  {
 	float: left;
 	}
@@ -408,3 +411,33 @@ padding: 4px 20px 6px;
 		right:-25px;
 		padding:0;
 	}
+
+
+/* = Media queries
+----------------------------------------------- */
+@media (max-width: 1112px) {
+
+  #style-gallery .style-features-info h4{
+    display: none;
+  }
+
+  #style-gallery .style-features-info {
+  	width: 100%;
+  	margin-top: 15px;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+	body.toplevel_page_nrelate-main .has-right-sidebar #post-body-content{
+		margin-right: 0;
+	}
+
+	body.toplevel_page_nrelate-main .inner-sidebar #side-sortables,
+	body.toplevel_page_nrelate-main .inner-sidebar {
+		width: 100%;
+	}
+
+}

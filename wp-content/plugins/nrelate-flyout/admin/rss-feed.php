@@ -517,7 +517,7 @@ function nrelate_custom_feed() {
     add_filter('the_content_feed', 'nrelate_execute_shortcode', 5);
 
 
-add_filter('the_content_feed', 'nrelate_get_excerpt');
+		add_filter('the_content_feed', 'nrelate_get_excerpt');
 
     
 		

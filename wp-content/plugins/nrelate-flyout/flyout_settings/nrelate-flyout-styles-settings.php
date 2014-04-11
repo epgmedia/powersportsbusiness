@@ -6,7 +6,7 @@
  * @subpackage Functions
  */
 if (!defined('NRELATE_FLYOUT_STYLE_THUMBNAILS_URL'))
-	define('NRELATE_FLYOUT_STYLE_THUMBNAILS_URL', 'http://imgcdn.nrelate.com/fow_wp/'. NRELATE_FLYOUT_PLUGIN_VERSION . '/images');
+	define('NRELATE_FLYOUT_STYLE_THUMBNAILS_URL', 'http://imgcdn.nrelate.com/fow_wp/'. NRELATE_FLYOUT_API_VERSION . '/images');
 
 function options_init_nr_fo_styles(){
 
@@ -278,7 +278,7 @@ function nrelate_flyout_styles_do_page() { ?>
 		//<![CDATA[
 		var nr_fo_plugin_settings_url = '<?php echo NRELATE_FLYOUT_SETTINGS_URL; ?>';
 		var nr_plugin_domain = '<?php echo NRELATE_BLOG_ROOT; ?>';
-		var nr_fo_plugin_version = '<?php echo NRELATE_FLYOUT_PLUGIN_VERSION ?>';
+		var nr_fo_plugin_version = '<?php echo NRELATE_FLYOUT_API_VERSION ?>';
 		//]]>
     </script>
 		<form name="settings" action="options.php" method="post" enctype="multipart/form-action">

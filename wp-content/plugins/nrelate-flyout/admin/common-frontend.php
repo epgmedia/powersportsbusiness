@@ -76,7 +76,7 @@ function nrelate_init_plugins() {
 
   if( array_sum($plugins) > 0 ) {
     $domain = esc_js(urldecode(NRELATE_BLOG_ROOT)); // The JS automatically encodes, so we decode here.
-    $loader_url = NRELATE_ADMIN_URL . '/nrelate_js'. ( NRELATE_JS_DEBUG ? '' : '.min') .'.js?ver=' . NRELATE_PLUGIN_VERSION;
+    $loader_url = ( NRELATE_JS_DEBUG ? ('http://staticrepo.nrelate.com/common_wp/'. NRELATE_PLUGIN_VERSION .'/nrelate_js.js') : ( NRELATE_ADMIN_URL . '/nrelate_js.min.js?ver=' . NRELATE_PLUGIN_VERSION ) );
 
     $options = array( "plugins" => array() );
     $async = "async";

@@ -2,10 +2,10 @@
 Contributors: joedolson
 Donate link: http://www.joedolson.com/donate.php
 Tags: calendar, dates, times, events, scheduling, event manager, event calendar
-Requires at least: 3.3.0
-Tested up to: 3.7.0
+Requires at least: 3.4.2
+Tested up to: 3.8.2
 License: GPLv2 or later
-Stable tag: 2.2.12
+Stable tag: 2.3.0
 
 Accessible WordPress event calendar plugin. Show events from multiple calendars on pages, in posts, or in widgets.
 
@@ -20,38 +20,27 @@ Easy to use for anybody, My Calendar provides enormous potential for developers 
 
 = Basic Features: =
 
-*	Standard calendar grid or list views of events
+*	Standard calendar grid and list views of events
 * 	Show events in monthly, weekly, or daily view.
 * 	Mini-calendar view for compact displays (as widget or as shortcode)
 *	Widget to show today's events
 *	Widget to show upcoming or past events 
-* 	Widget to search events
+* 	Event Search widget
 *	Custom templates for event output
-*	Limit by category/categories
-* 	Limit by location
-* 	Limit by author
+*	Limit views by categories, location, author, or host
 *	Disable default CSS and default JavaScript or display only on specific Pages/Posts
 *	Editable CSS styles and JavaScript behaviors
 *	Schedule a wide variety of recurring events.
-*	Individual occurrences of recurring events can be edited individually
-* 	Access to most aspects of My Calendar can be restricted by role. (Adding events, editing events, editing styles, changing settings, etc.)
-* 	Choose which of the following fields you want to enter and display for each event:
-	* title, 
-	* description, 
-	* event image,
-	* alternate description, 
-	* event host,
-	* event category, 
-	* URL, 
-	* registration status (open, closed or irrelevant), 
-	* event location
+*	Edit individual occurrences of recurring events
+* 	Rich permissions handling to restrict access to parts of My Calendar
 * 	Email notification to administrator when events are scheduled or reserved
 * 	Post to Twitter when events are created. (with [WP to Twitter](http://wordpress.org/extend/plugins/wp-to-twitter/))
 *	Location Manager for frequently used venues
 *   Fetch events from a remote MySQL database. (Sharing events in a network of sites.)
 *   Import from [Kieran O'Shea's Calendar plugin](http://wordpress.org/extend/plugins/calendar/)
 * 	Integrated Help page to guide in use of shortcodes and template tags
-*   New: [Developer Documentation](http://www.joedolson.com/articles/doc-category/my-calendar-3/)
+* 	Shortcode Generator to help create customized views of My Calendar
+*   [Developer Documentation](http://www.joedolson.com/articles/doc-category/my-calendar-3/)
 
 = Translations =
 
@@ -72,19 +61,82 @@ Translating my plug-ins is always appreciated. Visit <a href="http://translate.j
 
 3. Configure My Calendar using the following pages in the admin panel:
 
-   My Calendar -> Add/Edit Events
+   My Calendar -> Add/Manage Events
    My Calendar -> Manage Categories
    My Calendar -> Manage Locations
-   My Calendar -> Settings   
-   My Calendar -> Style Editor
-   My Calendar -> Behavior Editor
+   My Calendar -> Manage Event Groups
+   My Calendar -> Style Editor   
+   My Calendar -> Script Editor
    My Calendar -> Template Editor
+   My Calendar -> Settings
+   My Calendar -> Help
    
 4. Edit or create a page on your blog which includes the shortcode [my_calendar] and visit
    the page you have edited or created. You should see your calendar. Visit My Calendar -> Help for assistance
    with shortcode options or widget configuration.
 
 == Changelog ==
+
+= 2.3.0 =
+
+This is a major revision.
+
+* Bug fix: Manage events screen showed no data for users without manage_events permissions.
+* Bug fix: if single event set, could not filter to time period views.
+* Bug fix: 'single' template ID not passed into template filter.
+* Bug fix: events in private categories appeared in time-based upcoming events lists.
+* Bug fix: RSS feed encoding.
+* Bug fix: Turn-of-year issues with week view.
+* Bug fix: Added new locations multiple times if added with multiple occurrences of an event.
+* Bug fix: In some browsers, time selector added invalid data.
+* Bug fix: List of search results not wrapped in a list element.
+* Bug fix: Trim spaces on above/below navigation strings.
+* Bug fix: If an event ends at midnight, automatically end tomorrow unless set for a later date.
+* Bug fix: Don't show events on both days if they end at midnight.
+* Bug fix: Don't attempt to enqueue jquery.charcount.js if WP to Twitter not installed.
+* Bug fix: Dates didn't strip links in list view when JS disabled for that view.
+
+* New template tag: {runtime} to show human language version of length of event.
+* New template tag: {excerpt} to create autoexcerpt from description field, using shortdesc if it exists.
+
+* New feature: Accessibility features for locations.
+* New feature: Specify accessibility services for events.
+* New feature: ticketing link field
+* New feature: event registration information fields
+* New feature: my_calendar_event shortcode can query templates by keyword (list,mini,single,grid).
+* New feature: filter events by available accessibility services
+* New feature: Combined filter shortcode to group all filters into a single form. [mc_filters show='locations,categories,access']
+* New feature: new API for adding custom fields to events.
+* New feature: data API to fetch event data in JSON, CSV, or RSS formats. 
+* New feature: Archive events to hide from admin events list. 
+* New feature: Control input options for multiple types of location input data. 
+* New feature: Shortcode generator for primary, upcoming, and today's events shortcodes.
+* New feature: admin-side event search
+* New feature: category key now acts as quick links to filter by category
+* New feature: Option to add title to Event Search widget.
+
+* New filter: mc_date_format for customizing date formats.
+* New filter: customize search results page: mc_search_page
+* New filter: mc_use_permalinks to enable use of custom post type permalinks for single event pages.
+* New filter: mc_post_template to customize template used in single event shortcode automatically inserted into custom post type pages.
+
+* New design: new stylesheet available: twentyfourteen.css
+
+* Updated: added more fields to search on events.
+* Updated: updated image uploader to use add media panel and store attachment ID
+* Updated: <title> template supports all template tags (but strips HTML.).
+* Updated: Various aspects of UI
+* Updated: Date/time selectors. See http://amsul.ca/pickadate.js/, MIT license.
+
+* Reorganized default output template code.
+* Import all used locations into location manager.
+* Removed User settings fields.
+* Moved Holiday category assignment to Category Manager.
+* Improved get current URL function.
+* iCal output in multiple-month view outputs all displayed months.
+* {map} template tag to display a Google Map using the Google Maps API. (Not available in pop-up displays.)
+* Scheduled removal of showkey, shownav, toggle, and showjump shortcode attributes.
+* Removed upgrade support for 1.6.x & 1.7.x series of My Calendar.
 
 = 2.2.13 =
 
@@ -1119,7 +1171,7 @@ Because the majority of users end up on my web site asking for help anyway -- an
 
 = This plug-in is really complicated. Why can't you personally help me figure out how to use it? =
 
-I can! Just not in person. I've written a User's Guide for My Calendar, which you can [purchase at my web site](https://www.joedolson.com/articles/my-calendar/users-guide/) for $23. ($19 if you're not interested in getting updates.) This helps defray the thousand plus hours I've spent in developing the plug-in and providing support. Please, consider buying the User's Guide or [making a donation](https://www.joedolson.com/donate.php) before asking for support!
+I can! Just not in person. I've written a User's Guide for My Calendar, which you can [purchase at my web site](https://www.joedolson.com/articles/my-calendar/users-guide/) for $25. This helps defray the thousand plus hours I've spent in developing the plug-in and providing support. Please, consider buying the User's Guide or [making a donation](https://www.joedolson.com/donate.php) before asking for support!
 
 = How can my site visitors or members submit events? =
 
@@ -1140,5 +1192,6 @@ I've written a paid plug-in that adds this feature to My Calendar, called My Cal
 
 == Upgrade Notice ==
 
-= 2.2.12 =
-Believe me, it's frustrating to me, too. Bug fix to jQuery time output.
+= 2.3.0 =
+
+This is a MAJOR update. Be sure to backup!
