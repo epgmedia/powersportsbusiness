@@ -291,7 +291,7 @@ function nr_fo_add_defaults() {
 			'WIDTH'=>$r_anim_width,
 			'WIDTHTYPE'=>urlencode($r_anim_width_type)
 		);
-		$url = 'http://api.nrelate.com/fow_wp/'.NRELATE_FLYOUT_PLUGIN_VERSION.'/processWPflyoutAll.php';
+		$url = 'http://api.nrelate.com/fow_wp/'.NRELATE_FLYOUT_API_VERSION.'/processWPflyoutAll.php';
 		
 		$result=wp_remote_post($url,array('body'=>$body,'blocking'=>false, 'timeout'=>15));
 	}

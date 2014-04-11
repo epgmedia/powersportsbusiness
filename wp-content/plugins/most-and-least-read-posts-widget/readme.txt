@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.6.1
-Stable tag: 2.1.2
+Tested up to: 3.8.1
+Stable tag: 2.1.5
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -50,6 +50,13 @@ Do you like this plugin? Give a chance to our other works:
 == Installation ==
 Best is to install directly from WordPress. If manual installation is required, please make sure to put all of the plugin files in a folder named `most_and_least_read_posts_widget` (not two nested folders) in the plugin directory, then activate the plugin through the `Plugins` menu in WordPress.
 
+== Screenshots ==
+1. Sample Widget on site, plain wiew 
+2. Sample Widget on site, with post hits and thumbs 
+3. Options available in the Admin Widget box
+4. Options available in the Admin Settings menu 
+
+
 == Frequently Asked Questions ==
 
 = I get an error message that says "no results available" =
@@ -67,6 +74,15 @@ E.g. 50x50 pixels images, floating on the right:
 
 == Changelog ==
 
+= 2.1.5 =
+* Added: Screenshots
+
+= 2.1.4 =
+* Changed: Old tags cleaning
+
+= 2.1.3 =
+* Added: Donate link
+
 = 2.1.2 =
 * Changed: Code cleaning
 
@@ -74,15 +90,9 @@ E.g. 50x50 pixels images, floating on the right:
 * Changed: Code cleaning
 
 = 2.1 =
-* Fixed: Show post hits also when user is admin
-
-= 2.0.3 =
-* Changed: Skip updating hits if user is admin
-
-= 2.0.2 =
 * Added: WhileTrue RSS Feed
-
-= 2.0.1 =
+* Changed: Skip updating hits if user is admin
+* Fixed: Show post hits also when user is admin
 * Fixed: Fix for the "Exclude post whose title contains any of these words" option - thank you Thomas!
 
 = 2.0 =

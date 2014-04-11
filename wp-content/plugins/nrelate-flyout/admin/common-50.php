@@ -363,7 +363,7 @@ function nrelate_save_preview() { ?>
 	</span>
 	<span class="nrelate-submit-preview">
 		<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes','nrelate'); ?>" <?php echo NRELATE_API_ONLINE ? '' : 'disabled="disabled" title="Sorry nrelate\'s api server is not available. Please try again later"'; ?> />
-		<button type="button" class="nrelate_preview_button button-primary" <?php echo NRELATE_API_ONLINE ? '' : 'disabled="disabled" title="Sorry nrelate\'s api server is not available. Please try again later"'; ?>> <?php _e('Preview','nrelate'); ?> </button>
+		<input name="Preview" type="submit" class="nrelate_preview_button button-primary" value="<?php esc_attr_e('Preview','nrelate'); ?>" <?php echo NRELATE_API_ONLINE ? '' : 'disabled="disabled" title="Sorry nrelate\'s api server is not available. Please try again later"'; ?> />
 	</span>
 <?php
 }
