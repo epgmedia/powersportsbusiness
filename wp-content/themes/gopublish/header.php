@@ -87,15 +87,8 @@ $(".newsticker3-jcarousellite").jCarouselLite({
 </script>
 -->
 
-<?php wp_head(); ?>
-
-
 <style type="text/css" media="screen"><!-- @import url( <?php bloginfo('stylesheet_url'); ?> ); --></style>
-
 <?php include(TEMPLATEPATH . "/customstyles.php"); ?>
-
-
-
 
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 sfHover = function() {
@@ -130,81 +123,86 @@ sfHover = function() {
 if (window.attachEvent) window.attachEvent("onload", sfHover);
 //--><!]]>
 </script>
-
-
-
 <script type='text/javascript'>
-var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
-(function() {
-var gads = document.createElement('script');
-gads.async = true;
-gads.type = 'text/javascript';
-var useSSL = 'https:' == document.location.protocol;
-gads.src = (useSSL ? 'https:' : 'http:') +
-'//www.googletagservices.com/tag/js/gpt.js';
-var node = document.getElementsByTagName('script')[0];
-node.parentNode.insertBefore(gads, node);
-})();
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    (function() {
+        var gads = document.createElement('script');
+        gads.async = true;
+        gads.type = 'text/javascript';
+        var useSSL = 'https:' == document.location.protocol;
+        gads.src = (useSSL ? 'https:' : 'http:') +
+            '//www.googletagservices.com/tag/js/gpt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(gads, node);
+    })();
 </script>
 
 <?php
 $sww_uri = strtolower($_SERVER["REQUEST_URI"]);
 $openxcode = "
-googletag.cmd.push(function() {
-googletag.defineSlot('/35190362/PSB_ROS_160_SB1', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-0').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB2', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-1').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB3', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-2').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB4', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-3').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB5', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-4').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB6', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-5').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_160_SB7', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-6').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_Kolpin_Targeted_300', [300, 250], 'div-gpt-ad-1382561591995-0').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_Kolpin_Targeted_728', [728, 90], 'div-gpt-ad-1382561591995-1').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_300_LR', [300, 250], 'div-gpt-ad-1375801013938-7').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_300_Mid', [300, 250], 'div-gpt-ad-1375801013938-8').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_300_Mid2', [300, 250], 'div-gpt-ad-1375801013938-9').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_300_UR', [300, 250], 'div-gpt-ad-1375801013938-10').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_Footerboard', [[468, 60],[728, 90]], 'div-gpt-ad-1375801013938-11').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_Leaderboard', [728, 90], 'div-gpt-ad-1375801013938-12').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_middle468', [468, 60], 'div-gpt-ad-1375801013938-13').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_ROS_middle468_2', [468, 60], 'div-gpt-ad-1375801013938-14').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_Fox_Targeted_728', [728, 90], 'div-gpt-ad-1391092863898-0').addService(googletag.pubads());
-googletag.defineSlot('/35190362/PSB_Fox_Targeted_300', [300, 250], 'div-gpt-ad-1391029424174-0').addService(googletag.pubads());
-googletag.pubads().collapseEmptyDivs();
-googletag.enableServices();
-});
+    googletag.cmd.push(function() {
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB1', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-0').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB2', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-1').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB3', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-2').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB4', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-3').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB5', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-4').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB6', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-5').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_160_SB7', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-6').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_Kolpin_Targeted_300', [300, 250], 'div-gpt-ad-1382561591995-0').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_Kolpin_Targeted_728', [728, 90], 'div-gpt-ad-1382561591995-1').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_300_LR', [300, 250], 'div-gpt-ad-1375801013938-7').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_300_Mid', [300, 250], 'div-gpt-ad-1375801013938-8').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_300_Mid2', [300, 250], 'div-gpt-ad-1375801013938-9').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_300_UR', [300, 250], 'div-gpt-ad-1375801013938-10').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_Footerboard', [[468, 60],[728, 90]], 'div-gpt-ad-1375801013938-11').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_Leaderboard', [728, 90], 'div-gpt-ad-1375801013938-12').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_middle468', [468, 60], 'div-gpt-ad-1375801013938-13').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_middle468_2', [468, 60], 'div-gpt-ad-1375801013938-14').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_Fox_Targeted_728', [728, 90], 'div-gpt-ad-1391092863898-0').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_Fox_Targeted_300', [300, 250], 'div-gpt-ad-1391029424174-0').addService(googletag.pubads());
+        googletag.pubads().collapseEmptyDivs();
+        googletag.enableServices();
+    });
 ";
 
 if (strpos($sww_uri,'/power-50/') !== false) {
-	$searchstr = "div-gpt-ad-1375801013938";
-	$replacestr = "div-gpt-ad-1375817072470";
-	$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
+    $searchstr = "div-gpt-ad-1375801013938";
+    $replacestr = "div-gpt-ad-1375817072470";
+    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
 
-	$searchstr = "PSB_ROS";
-	$replacestr = "PSB_P50";
-	$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
+    $searchstr = "PSB_ROS";
+    $replacestr = "PSB_P50";
+    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
 
 }
 
 if (strpos($sww_uri,'/institute/') !== false) {
-	$searchstr = "div-gpt-ad-1375801013938";
-	$replacestr = "div-gpt-ad-1375816978942";
-	$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
+    $searchstr = "div-gpt-ad-1375801013938";
+    $replacestr = "div-gpt-ad-1375816978942";
+    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
 
-	$searchstr = "PSB_ROS";
-	$replacestr = "PSB_AIM";
-	$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
+    $searchstr = "PSB_ROS";
+    $replacestr = "PSB_AIM";
+    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
 }
 ?>
 <script type='text/javascript'>
-<?php echo $openxcode ?>
+    <?php echo $openxcode ?>
 </script>
+
+<?php wp_head(); ?>
 
 </head>
 
 
 <body>
+
+<?php
+/** After the header hook */
+after_header();
+?>
+
 <div id="rightcolumnads">
 	<?php if ( function_exists('dynamic_sidebar') && dynamic_sidebar(6) ) : else : endif; ?>
 </div>

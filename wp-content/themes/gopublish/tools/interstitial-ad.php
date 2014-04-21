@@ -38,63 +38,102 @@ class epg_interstitial_ads {
     /**
      * Constructor
      */
-    function __constructor() {
-        $this->referringURL = $_SERVER['HTTP_REFERER'];
-        $this->visitCookie = $_COOKIE['seenAdPsb'];
-        add_action('init', $this->enqueueAdPosition());
+    public function __construct() {
+        if ( isset($_SERVER['HTTP_REFERER']) ) {
+            $this->referringURL = $_SERVER['HTTP_REFERER'];
+        }
+        if ( isset($_COOKIE['seenAdPsb']) ) {
+            $this->visitCookie = $_COOKIE['seenAdPsb'];
+        }
+        add_action('init', array($this, 'enqueueAdPosition'));
     }
     /**
      * Enqueues items in HEAD
      */
-    private function enqueueAdPosition() {
+    public function enqueueAdPosition() {
         $this->cookieCheck();
     }
     /**
      * Checks to see if they're coming from Informz or outside URL
      * and whether they got cookies
      */
-    private function cookieCheck() {
+    public function cookieCheck() {
         if (!$this->visitCookie) {
             $this->referralSource();
         }
     }
 
-    private function referralSource() {
-        if ($this->referringURL &&
-            !preg_match("/\/\/epgmediallc\.informz\.net/ig", $this->referringURL) ) {
-            echo 'enqueue scripts and position';
-            add_action( 'wp_head', $this->headerScript() );
-            add_action( 'after_header', $this->adPosition() );
+    public function referralSource() {
+        if (!preg_match("/\/\/epgmediallc\.informz\.net/", $this->referringURL) &&
+            !preg_match("/powersportsbusiness\.com/", $this->referringURL) &&
+            !preg_match("/\/\/epgmedia\.s3\.amazonaws\.com/", $this->referringURL)
+        ) {
+            add_action( 'wp_head', array($this, 'headerScript'), 10, '');
+            add_action( 'after_header', array($this, 'adPosition'), 100, '' );
         }
 
     }
 
-    private function headerScript() {
-        echo $headerScript = "<script type='text/javascript'>
-            googletag.cmd.push(function() {
-            googletag.defineSlot('/35190362/PSB_Roadblock', [595, 430], 'div-gpt-ad-1397853377694-0').addService(googletag.pubads());
-            googletag.defineOutOfPageSlot('/35190362/PSB_Roadblock', 'div-gpt-ad-1397853377694-0-oop').addService(googletag.pubads());
-            googletag.pubads().enableSingleRequest();
-            googletag.enableServices();
-            });
+    public function headerScript() {
+        echo "
+            <script type='text/javascript'>
+
+                googletag.cmd.push(function() {
+                    googletag.defineSlot('/35190362/PSB_ROS_Roadblock', [1, 1], 'div-gpt-ad-1398116137114-0').addService(googletag.pubads());
+                    googletag.defineOutOfPageSlot('/35190362/PSB_ROS_Roadblock', 'div-gpt-ad-1398116137114-0-oop').addService(googletag.pubads());
+                    googletag.pubads().enableSingleRequest();
+                    googletag.enableServices();
+                });
+
+                jQuery('.interstitialAd').ready(function($) {
+                    $('#closeInterstitial').click(function() {
+                        $('.interstitialAd').remove('.interstitialAd');
+                        console.log('Clicked');
+                    })
+                    var e = $('#countdownRedirect').html();
+                    if( ! e ) {
+                        throw new Error('COUNTDOWN_REDIRECT element id not found');
+                    }
+                    console.log(e);
+                    var cTicks = e;
+                    setInterval(function() {
+                        if( cTicks ) {
+                            $('#countdownRedirect').html(--cTicks);
+                        } else {
+                            clearInterval(e);
+                            $('.interstitialAd').remove('.interstitialAd');
+                        }
+                    }, 1000);
+                });
+
+
             </script>";
 
         return;
     }
 
-    private function adPosition() {
-        echo $position = "
-            <!-- PSB_Roadblock -->
-            <div id='div-gpt-ad-1397853377694-0' style='width:595px; height:430px;'>
-                <script type='text/javascript'>
-                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1397853377694-0'); });
-                </script>
-            </div>
-            <!-- PSB_Roadblock out-of-page -->
-            <div id='div-gpt-ad-1397853377694-0-oop'>
-                <script type='text/javascript'>
-                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1397853377694-0-oop'); });
-                </script>
+    public function adPosition() {
+        echo "<div class='interstitialAd'>
+                <div class='head'>
+                    <div>
+                        <img src='http://epgmedia.s3.amazonaws.com/email/powersportsbusiness/enewsletter/2013/images/PSBRedirectheader.jpeg' width='400' alt='PowersportsBusiness.com' />
+                    </div>
+                    <div>
+                        <span>You will automatically be redirected in <span class='counter' id='countdownRedirect'>15</span> seconds. <a id='closeInterstitial'>Click here to proceed</a>.</span>
+                    </div>
+                </div>
+                <!-- PSB_ROS_Roadblock -->
+                <div id='div-gpt-ad-1398116137114-0' style='width:1px; height:1px;'>
+                    <script type='text/javascript'>
+                        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0'); });
+                    </script>
+                </div>
+                <!-- PSB_ROS_Roadblock out-of-page -->
+                <div id='div-gpt-ad-1398116137114-0-oop'>
+                    <script type='text/javascript'>
+                        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0-oop'); });
+                    </script>
+                </div>
             </div>";
 
         return;
