@@ -1,4 +1,13 @@
 <?php
+setcookie( 'seenAdPsb', TRUE, time()+(60*60*6), COOKIEPATH, COOKIE_DOMAIN, false );
+
+function after_header() {
+    do_action('after_header');
+}
+
+/** Interstitial Ads */
+include(TEMPLATEPATH . "/tools/interstitial-ad.php");
+
 include(TEMPLATEPATH."/tools/theme-options.php");
 
 add_option("home_left_column", '280', '', 'yes');
