@@ -189,7 +189,7 @@ function page_id_to_name($id) {
 	include(TEMPLATEPATH."/tools/audio.php");
 	//include(TEMPLATEPATH."/tools/video.php");
 	include(TEMPLATEPATH."/tools/videoembed.php");
-	//include(TEMPLATEPATH."/tools/advertisement.php");
+	include(TEMPLATEPATH."/tools/advertisement.php");
 	include(TEMPLATEPATH."/tools/categorywidget.php");
 	include(TEMPLATEPATH."/tools/productshowcase.php");
 	include(TEMPLATEPATH."/tools/pagewidget.php"); 
