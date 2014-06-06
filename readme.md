@@ -1,5 +1,4 @@
 # Powersports Business magazine #
-==============================
 
 ## Homepage
 
