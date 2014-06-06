@@ -10,6 +10,7 @@
 
 # Except....
 !/readme.md
+!/docs
 
 !.*
 !/wp-content
