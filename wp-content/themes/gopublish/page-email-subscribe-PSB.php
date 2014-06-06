@@ -14,10 +14,11 @@ get_header();
         <div class="postarea">
 
             <?php include(TEMPLATEPATH."/breadcrumb.php");?>
+
             <form method="post" name="profileform" action="https://EPGMediaLLC.informz.net/clk/remote_post.asp">
-                <h2>Enter Your Personal Information</h2>
                 <span style="color:red;font-size:10px;">*&nbsp;Required</span><br />
-		        <p>
+                <h1>Enter Your Personal Information</h1>
+                <p>
                     <label for="email">Email:<span style="color:red;">*</span></label>
                     <input alt="Email Address" type="text" id="email" name="email" maxlength="100" value="" >
                 </p>
