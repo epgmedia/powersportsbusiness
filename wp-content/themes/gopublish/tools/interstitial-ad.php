@@ -42,7 +42,7 @@ class epg_interstitial_ads {
         if ( isset($_SERVER['HTTP_REFERER']) ) {
             $this->referringURL = $_SERVER['HTTP_REFERER'];
         }
-        if ( isset($_COOKIE['seenAdPsb']) ) {
+        if ( isset( $_COOKIE['seenAdPsb'] ) ) {
             $this->visitCookie = $_COOKIE['seenAdPsb'];
         }
         add_action('init', array($this, 'enqueueAdPosition'));
@@ -99,7 +99,7 @@ class epg_interstitial_ads {
                             $('#countdownRedirect').html(--cTicks);
                         } else {
                             clearInterval(e);
-                            $('.interstitialAd').remove('.interstitialAd');
+                            $('.interstitialAd').hide('.interstitialAd');
                         }
                     }, 1000);
                 });
