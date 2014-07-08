@@ -599,7 +599,8 @@ function update_nrelate_data_fo(){
 
 	$body=array(
 		'DOMAIN'=>NRELATE_BLOG_ROOT,
-		'VERSION'=>NRELATE_FLYOUT_PLUGIN_VERSION,
+		'PLUGIN_VERSION'=>NRELATE_FLYOUT_PLUGIN_VERSION,
+		'API_VERSION'=>NRELATE_FLYOUT_API_VERSION,
 		'KEY'=>	get_option('nrelate_key'),
 		'NUM'=>$number,
 		'NUMEXT'=>$number_ext,

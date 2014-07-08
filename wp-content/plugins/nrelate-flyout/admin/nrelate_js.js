@@ -1,4 +1,4 @@
-/*v.132.wp*/
+/*v.134*/
 if ( typeof nRelate == 'undefined' ) {
 	var nr_load_time = new Date().getTime();
 	nRelate = function() {		
@@ -305,22 +305,6 @@ if ( typeof nRelate == 'undefined' ) {
 						return pls;
 					}
 				}
-
-				if ( ( candidates = this.xgeba("meta", "property", "og:url") ).length > 0 ) {
-					for( i=0, l=this.options.plugins[ p ].phs.length; i < l; i++ ) {
-						pls[ pls.length ] = { href : candidates[0].content }
-					}
-					this.debug("Found og:url meta tag");
-					return pls;
-				}
-
-				if ( ( candidates = this.xgeba("link", "rel", "canonical") ).length > 0 ) {
-					for( i=0, l=this.options.plugins[ p ].phs.length; i < l; i++ ) {
-						pls[ pls.length ] = candidates[0];
-					}
-					this.debug("Found canonical link tag");
-					return pls;
-				}
 				
 				if ( ( pls = this.xgeba('a', 'title', 'permanent link') ).length > 1 ) {
 					this.debug("Found title='permanent link' permalinks %o", pls);
@@ -375,6 +359,22 @@ if ( typeof nRelate == 'undefined' ) {
 						this.debug("Found first links inside div.post %o", pls);
 						return pls;
 					}
+				}
+
+				if ( ( candidates = this.xgeba("meta", "property", "og:url") ).length > 0 ) {
+					for( i=0, l=this.options.plugins[ p ].phs.length; i < l; i++ ) {
+						pls[ pls.length ] = { href : candidates[0].content }
+					}
+					this.debug("Found og:url meta tag");
+					return pls;
+				}
+
+				if ( ( candidates = this.xgeba("link", "rel", "canonical") ).length > 0 ) {
+					for( i=0, l=this.options.plugins[ p ].phs.length; i < l; i++ ) {
+						pls[ pls.length ] = candidates[0];
+					}
+					this.debug("Found canonical link tag");
+					return pls;
 				}
 				
 				this.debug("No permalinks found");
@@ -912,13 +912,18 @@ if ( typeof nRelate == 'undefined' ) {
 				
 				while( e.nodeName.toLowerCase() !='a' ){ e = e.parentNode; }
 				
-                if ( this.xhc(e, 'nr_partner') || (this.xhc(e, 'nr_tx_link') && this.xhc(e, 'nr_external')) ) {
-					return true;
-				} else if ( this.xhc(e, 'nr_external') ) {
-					nr_type = 'external';
-				} else {
-					nr_type = 'internal';
-				}
+                if ( this.xhc(e, 'nr_partner') )
+                    return true;
+                if ( this.xhc(e, 'nr_relatedsearch') )
+                    return true;
+                if ( this.xhc(e, 'nr_tx_link') && this.xhc(e, 'nr_external') )
+                    return true;
+
+                if ( this.xhc(e, 'nr_external') ) {
+                    nr_type = 'external';
+                } else {
+                    nr_type = 'internal';
+                }
 				
 				// Count view in case it wasn't counted before
 				this.cwv( ct, this.options.plugins[ p ] );
@@ -1217,7 +1222,7 @@ if ( typeof nRelate == 'undefined' ) {
 						content = document.createElement( 'iframe' );
 						content.id = id;
 						content.src = args.whats_this_url || plugin.whats_this_url;
-						content.style.width = "100%";
+						content.style.width  = "100%";
 						content.style.height = "150%";
 						content.style.border = "0px";
 						content.setAttribute("border", "0");
@@ -2720,7 +2725,7 @@ if ( typeof nRelate == 'undefined' ) {
 			supported_ad_places : [null, 'First', 'Last', 'Mixed', 'Separate'],
 			supported_widgetstyles : [null, 1, 0], // 1: Thumbnail, 0: Text
 			
-			whats_this_url	: "http://static.nrelate.com/common_js/sponsor_disclaimer.html",
+			whats_this_url	: "http://staticjs.nrcdn.com/common_js/sponsor_disclaimer.html",
 
 			count_views		: true,
 			
@@ -2769,28 +2774,35 @@ if ( typeof nRelate == 'undefined' ) {
 			 * nRelate related search
 			 */
 			mapps : _nrelate.extend(true, {}, _plugin_base, {
-				api_url		: "https://api.offercastmobile.com/appwall/45.jsonp",
+				api_url 	: "https://api.offercastmobile.com/nativead/[api_ver].jsonp",
 				shortname 	: "ma",
 				fullname 	: "mapps",
 
 				_defaults : { 
 					access_token 	: "",
-					nomappsposts	: 2
+					nomappsposts	: 2,
+					mapps_api_ver 	: 1
 				},
 
 				// Sends extra parameters to API
 				capip : function( url, plugin, ct ) {
 
+					// TODO FIX YK hack while HB is out
+					// 41 and 50 will always remain the same, as long as the api_url for mapps stays the same
+					var start = 41
+					var end = 50
+					url = url.substring(0, start) + plugin.mapps_api_ver + url.substring(end);
+
 					url = this.aurlp( url, {
 						access_token 	: plugin.access_token,
 						jsonCallback 	: "nRelate.sw",
 						sessionid 		: this.get_print_id(),
-                        ct_id           : ct.id,
-                        totalCampaignsRequested : plugin.nomappsposts ? plugin.nomappsposts : 2
-                        //platformVersion : "",
-                        //uuid            : "",
-                        //funnelid        : "",
-                        //appid           : "",
+						ct_id           : ct.id,
+						totalCampaignsRequested : plugin.nomappsposts ? plugin.nomappsposts : 2
+						//platformVersion : "",
+						//uuid            : "",
+						//funnelid        : "",
+						//appid           : "",
 						//storeCategory 	: "",
 						//serviceProvider : "",
 						//brand 			: "",
@@ -2821,13 +2833,13 @@ if ( typeof nRelate == 'undefined' ) {
 						// this.lr( imp_url );
 					}
 
-                    on_load_url = this.aurlp( this.options.on_load_track_url, {
-                        pr_id: this.get_print_id(),
-                        widget_id: ct.nr_widget_id,
-                        url: ct.nr_src_url,
-                        domain: this.options.domain,
-                        plugin: this.options.plugins[ ct.nr_plugin ].shortname
-                    }); 
+					on_load_url = this.aurlp( this.options.on_load_track_url, {
+						pr_id: this.get_print_id(),
+						widget_id: ct.nr_widget_id,
+						url: ct.nr_src_url,
+						domain: this.options.domain,
+						plugin: this.options.plugins[ ct.nr_plugin ].shortname
+					}); 
 					this.lr( on_load_url );
 				}
 			}),
@@ -2988,7 +3000,7 @@ if ( typeof nRelate == 'undefined' ) {
 					if ( fo_close = this.xgebi('nrelate_flyout_close') ) {
 						
 						// TODO: evaluate moving this to CSS
-						fo_close.style.background = "#fff url(http://static.nrelate.com/common_js/close_window.gif) no-repeat 0 0";
+						fo_close.style.background = "#fff url(http://staticjs.nrcdn.com/common_js/close_window.gif) no-repeat 0 0";
 						
 						this.bind( fo_close, "click", function(){
 							plugin.fo_animate_close.call( self, plugin, ct );
@@ -3381,7 +3393,7 @@ if ( typeof nRelate == 'undefined' ) {
 		//**********************************************
 		function mDialog( sDialogId )
 		{
-			var args = _nrelate.extend( {}, { type:'alert', callback:null, width: 550, height: 0 }, arguments[1] );
+			var args = _nrelate.extend( {}, { type:'alert', callback:null }, arguments[1] );
 
 			this.dialog = _nrelate.xgebi( sDialogId );
 			if ( !this.dialog ) {
@@ -3521,7 +3533,7 @@ if ( typeof nRelate == 'undefined' ) {
 			var e = mDialog.grey;
 
 			this.is_opened = true;
-
+			
 			if (e) {
 				this.dialog.greyZIndex = _nrelate.xGetComputedStyle(e, 'z-index', 1);
 				e.style.zIndex = _nrelate.xGetComputedStyle(this.dialog, 'z-index', 1) - 1;
@@ -3534,7 +3546,7 @@ if ( typeof nRelate == 'undefined' ) {
 			var width = _nrelate.xClientWidth(),
 				height = _nrelate.xClientHeight(),
 				e = mDialog.grey;
-
+			
 			if ( !_nrelate.is_defined( this.dialog.max_dimensions ) ) {
 				this.dialog.max_dimensions = {
 					width : this.dialog.offsetWidth - 30,
@@ -3543,14 +3555,14 @@ if ( typeof nRelate == 'undefined' ) {
 			}
 
 			this.dialog.style.width  = (width > 660) ? (660 + 'px') : (parseInt(width*0.9) + 'px');
-
+			
 			if ( width > 660 ) { this.dialog.style.height = 540 + 'px'; }
 			else if ( width > 400 ) { this.dialog.style.height = 590 + 'px'; }
 			else if ( width > 300 ) { this.dialog.style.height = 690 + 'px'; }
 
 			this.dialog.style.left   = Math.max( 0, ( (width-this.dialog.offsetWidth)/2 ) ) + "px";
 			this.dialog.style.top    = Math.max( 0, ( _nrelate.xScrollTop()+(height-this.dialog.offsetHeight)/2) ) + "px";
-
+			
 			if ( e ) {
 				e.style.left = "0px";
 				e.style.top = "0px";

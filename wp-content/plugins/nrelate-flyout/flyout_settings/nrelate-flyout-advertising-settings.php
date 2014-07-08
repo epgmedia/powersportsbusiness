@@ -183,7 +183,8 @@ function update_nrelate_data_fo_adv(){
 		'ADNUM'=>$flyout_ad_num,
 		'ADPLACE'=>$flyout_ad_place,
 		'ADTITLE'=>$flyout_ad_title,
-		'VERSION'=>NRELATE_FLYOUT_PLUGIN_VERSION,
+		'PLUGIN_VERSION'=>NRELATE_FLYOUT_PLUGIN_VERSION,
+		'API_VERSION'=>NRELATE_FLYOUT_API_VERSION,
 		'KEY'=>get_option('nrelate_key')
 	);
 	$url = 'http://api.nrelate.com/fow_wp/'.NRELATE_FLYOUT_API_VERSION.'/processWPflyout_ad.php';

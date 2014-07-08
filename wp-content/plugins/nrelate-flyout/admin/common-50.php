@@ -341,6 +341,15 @@ function nrelate_text_labs() {
 	printf(__('%sTry out some new nrelate features, by selecting the BETA VERSION.%s','nrelate'), '<p class="section-desc">', '</p>');
 }
 
+
+
+/**
+ * Settings Page: USER CONTROL Settings description
+ */
+function nrelate_text_usercontrol() {
+	printf(__('%sTurning this feature on gives your users the ability to offer feedback on posts, and/or block content they don’t wish to see.%s','nrelate'), '<p class="section-desc">', '</p>');
+}
+
 /**
  * Settings Page: RESET Settings description
  */
