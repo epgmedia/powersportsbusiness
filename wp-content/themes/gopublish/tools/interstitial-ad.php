@@ -58,20 +58,18 @@ class epg_interstitial_ads {
      * and whether they got cookies
      */
     public function cookieCheck() {
-        if (!$this->visitCookie) {
-            $this->referralSource();
-        }
-    }
+        if ( NULL !== $this->visitCookie ) {
 
-    public function referralSource() {
-        if (!preg_match("/\/\/epgmediallc\.informz\.net/", $this->referringURL) &&
-            !preg_match("/powersportsbusiness\.com/", $this->referringURL) &&
-            !preg_match("/\/\/epgmedia\.s3\.amazonaws\.com/", $this->referringURL)
-        ) {
-            add_action( 'wp_head', array($this, 'headerScript'), 10, '');
-            add_action( 'after_header', array($this, 'adPosition'), 100, '' );
+			return;
         }
 
+		if (!preg_match("/\/\/epgmediallc\.informz\.net/", $this->referringURL) ||
+			!preg_match("/powersportsbusiness\.com/", $this->referringURL) ||
+			!preg_match("/\/\/epgmedia\.s3\.amazonaws\.com/", $this->referringURL)
+		) {
+			add_action( 'wp_head', array($this, 'headerScript'), 10, '');
+			add_action( 'after_header', array($this, 'adPosition'), 100, '' );
+		}
     }
 
     public function headerScript() {
