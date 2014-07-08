@@ -2497,3 +2497,16 @@ div.leaderboardleft div {margin:auto;!important;}
     margin: 2em auto;
     width: 100%;
 }
+
+/************************************************
+
+Wallpaper Ad
+************************************************/
+.wallpaperAd, .wallpaperAd div, .wallpaperAd div iframe {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:-1;
+}

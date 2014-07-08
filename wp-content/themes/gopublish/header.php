@@ -161,7 +161,7 @@ $openxcode = "
         googletag.defineSlot('/35190362/PSB_ROS_middle468_2', [468, 60], 'div-gpt-ad-1375801013938-14').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_Fox_Targeted_728', [728, 90], 'div-gpt-ad-1391092863898-0').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_Fox_Targeted_300', [300, 250], 'div-gpt-ad-1391029424174-0').addService(googletag.pubads());
-        googletag.pubads().collapseEmptyDivs();
+        googletag.pubads().collapseEmptyDivs(true);
         googletag.enableServices();
     });
 ";

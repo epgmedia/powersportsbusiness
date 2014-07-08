@@ -1,13 +1,20 @@
 <?php
-error_reporting(0);
+/**
+ * Theme Functions
+ */
 
 // Ad cookie
 setcookie( 'seenAdPsb', TRUE, time()+(60*60*6), COOKIEPATH, COOKIE_DOMAIN, false );
+
 if ($_GET['unsetCookie'] && is_admin()) {
-    setcookie("seenAdPsb", TRUE, time()-43600, COOKIEPATH, COOKIE_DOMAIN, false);
+    setcookie( "seenAdPsb", TRUE, time()-43600, COOKIEPATH, COOKIE_DOMAIN, false );
 }
+
 /** Interstitial Ads */
 include(TEMPLATEPATH . "/tools/interstitial-ad.php");
+
+/** Wallpaper Ads */
+include(TEMPLATEPATH . "/tools/wallpaper-ad.php");
 
 function after_header() {
     do_action('after_header', '');
@@ -186,11 +193,11 @@ function page_id_to_name($id) {
 
 	include(TEMPLATEPATH."/tools/enews.php");
 	include(TEMPLATEPATH."/tools/snotext.php");
-	include(TEMPLATEPATH."/tools/audio.php");
+	//include(TEMPLATEPATH."/tools/audio.php");
 	//include(TEMPLATEPATH."/tools/video.php");
-	include(TEMPLATEPATH."/tools/videoembed.php");
-	include(TEMPLATEPATH."/tools/advertisement.php");
-	include(TEMPLATEPATH."/tools/categorywidget.php");
+	//include(TEMPLATEPATH."/tools/videoembed.php");
+	//include(TEMPLATEPATH."/tools/advertisement.php");
+	//include(TEMPLATEPATH."/tools/categorywidget.php");
 	include(TEMPLATEPATH."/tools/productshowcase.php");
 	include(TEMPLATEPATH."/tools/pagewidget.php"); 
 
