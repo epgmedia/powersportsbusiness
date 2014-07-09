@@ -58,19 +58,36 @@ class epg_interstitial_ads {
      * and whether they got cookies
      */
     public function cookieCheck() {
-        if ( NULL !== $this->visitCookie ) {
+		/**
+		 * If:
+		 *  No Cookie
+		 *  Coming from Informz
+		 *  On the site already
+		 *  Coming from Transition Page
+		 *
+		 * Exit
+		 */
+		if (
+			NULL !== $this->visitCookie ||
+			preg_match( "/epgmediallc\.informz\.net/", $this->referringURL ) ||
+			preg_match( "/powersportsbusiness\.com/", $this->referringURL ) ||
+			preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL )
+		) {
 
 			return;
         }
 
-		if (!preg_match("/epgmediallc\.informz\.net/", $this->referringURL) ||
-			!preg_match("/powersportsbusiness\.com/", $this->referringURL) ||
-			!preg_match("/epgmedia\.s3\.amazonaws\.com/", $this->referringURL)
-		) {
-			add_action( 'wp_head', array($this, 'headerScript'), 10, '');
-			add_action( 'after_header', array($this, 'adPosition'), 100, '' );
-		}
+		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
+		add_action( 'wp_head', array($this, 'headerScript'), 10, '');
+		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
     }
+
+	public function print_to_foot() {
+
+		echo "<!-- Referral URL -->";
+		echo "<!-- " . $this->referringURL . " --!>";
+
+	}
 
     public function headerScript() {
         echo "

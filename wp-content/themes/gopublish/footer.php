@@ -16,59 +16,57 @@
 
 </div>
 
-<?php do_action('wp_footer'); ?>
+<!-- Footer --><?php do_action('wp_footer'); ?>
 
 
-            <?php if(get_theme_mod('analytics') == 'Yes') { ?>
-                
-<script type="text/javascript">
+		<?php if(get_theme_mod('analytics') == 'Yes') { ?>
+        <!-- Analytics -->
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '<?php echo get_theme_mod('analytics_code'); ?>']);
-  _gaq.push(['_trackPageview']);
+			ga('create', <?php echo get_theme_mod('analytics_code'); ?>, 'auto');
+			ga('require', 'displayfeatures');
+			ga('send', 'pageview');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+		</script>
 
-</script>
+		<?php } ?>
 
-            <?php } ?> 
+		<!-- Quantcast Tag -->
+		<script type="text/javascript">
+			var _qevents = _qevents || [];
 
-<!-- Quantcast Tag -->
-<script type="text/javascript">
-var _qevents = _qevents || [];
+			(function() {
+				var elem = document.createElement('script');
+				elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+				elem.async = true;
+				elem.type = "text/javascript";
+				var scpt = document.getElementsByTagName('script')[0];
+				scpt.parentNode.insertBefore(elem, scpt);
+			})();
 
-(function() {
-var elem = document.createElement('script');
-elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-elem.async = true;
-elem.type = "text/javascript";
-var scpt = document.getElementsByTagName('script')[0];
-scpt.parentNode.insertBefore(elem, scpt);
-})();
+			_qevents.push({
+				qacct:"p-0948HkAy_Q_06"
+			});
+		</script>
 
-_qevents.push({
-qacct:"p-0948HkAy_Q_06"
-});
-</script>
+		<noscript>
+			<div style="display:none;">
+				<img src="//pixel.quantserve.com/pixel/p-0948HkAy_Q_06.gif" border="0" height="1" width="1" alt="Quantcast"/>
+			</div>
+		</noscript>
+		<!-- End Quantcast tag -->
 
-<noscript>
-<div style="display:none;">
-<img src="//pixel.quantserve.com/pixel/p-0948HkAy_Q_06.gif" border="0" height="1" width="1" alt="Quantcast"/>
-</div>
-</noscript>
-<!-- End Quantcast tag -->
-
-<SCRIPT LANGUAGE='JAVASCRIPT'>
-if( document.URL.indexOf('zmsg=1') > -1)
-{
-alert('Thank you for subscribing.')
-}
-</SCRIPT>
-<!-- Email confirmation -->
+		<SCRIPT LANGUAGE='JAVASCRIPT'>
+			if( document.URL.indexOf('zmsg=1') > -1)
+			{
+				alert('Thank you for subscribing.')
+			}
+		</SCRIPT>
+		<!-- Email confirmation -->
 
 </body>
 </html>
