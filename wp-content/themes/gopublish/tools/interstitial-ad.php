@@ -84,22 +84,21 @@ class epg_interstitial_ads {
                 });
 
                 jQuery('.interstitialAd').ready(function($) {
+                	var ad = '.interstitialAd';
                     $('#closeInterstitial').click(function() {
-                        $('.interstitialAd').remove('.interstitialAd');
-                        console.log('Clicked');
+                        $(ad).hide();
                     })
                     var e = $('#countdownRedirect').html();
                     if( ! e ) {
                         throw new Error('COUNTDOWN_REDIRECT element id not found');
                     }
-                    console.log(e);
                     var cTicks = e;
                     setInterval(function() {
                         if( cTicks ) {
                             $('#countdownRedirect').html(--cTicks);
                         } else {
                             clearInterval(e);
-                            $('.interstitialAd').hide('.interstitialAd');
+                            $(ad).hide();
                         }
                     }, 1000);
                 });

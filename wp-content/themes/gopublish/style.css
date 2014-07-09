@@ -2498,6 +2498,10 @@ div.leaderboardleft div {margin:auto;!important;}
     width: 100%;
 }
 
+#closeInterstitial {
+	font-weight: bold;
+}
+
 /************************************************
 
 Wallpaper Ad
