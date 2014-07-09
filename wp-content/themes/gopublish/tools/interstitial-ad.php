@@ -60,15 +60,21 @@ class epg_interstitial_ads {
     public function cookieCheck() {
 		/**
 		 * If:
-		 *  No Cookie
-		 *  Coming from Informz
-		 *  On the site already
-		 *  Coming from Transition Page
+		 *   No Cookie
+		 * or
+		 *   No Referer
+		 * or
+		 *   Coming from Informz
+		 * or
+		 *   On the site already
+		 * or
+		 *   Coming from Transition Page
 		 *
 		 * Exit
 		 */
 		if (
 			NULL !== $this->visitCookie ||
+			NULL === $this->referringURL ||
 			preg_match( "/epgmediallc\.informz\.net/", $this->referringURL ) ||
 			preg_match( "/powersportsbusiness\.com/", $this->referringURL ) ||
 			preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL )
