@@ -66,26 +66,26 @@ class epg_interstitial_ads {
     protected function referral_check() {
 		/**
 		 * If:
-		 *   No Cookie                   or
-		 *   Coming from Informz         or
-		 *   On the site already         or
-		 *   Coming from Transition Page
+		 *   Cookie or
+		 *   Not on the site already or
+		 *   Coming from Transition Page or
+		 *   Coming from Informz
 		 * then
-		 *   FALSE
-		 * Else
 		 *   TRUE
+		 * Else
+		 *   FALSE
 		 */
 		if (
 			$this->visitCookie !== NULL ||
-			preg_match( "/epgmediallc\.informz\.net/", $this->referringURL ) ||
-			preg_match( "/powersportsbusiness\.com/", $this->referringURL ) ||
-			preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL )
+			!preg_match( "/powersportsbusiness\.com/", $this->referringURL ) ||
+			!preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL ||
+			!preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )  )
 		) {
 
-			return FALSE;
+			return TRUE;
         }
 
-		return TRUE;
+		return FALSE;
     }
 
 	protected function set_cookie() {
