@@ -39,54 +39,66 @@ class epg_interstitial_ads {
      * Constructor
      */
     public function __construct() {
-        if ( isset($_SERVER['HTTP_REFERER']) ) {
+        if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
             $this->referringURL = $_SERVER['HTTP_REFERER'];
         }
         if ( isset( $_COOKIE['seenAdPsb'] ) ) {
             $this->visitCookie = $_COOKIE['seenAdPsb'];
         }
-        add_action('init', array($this, 'enqueueAdPosition'));
+
+		if ( TRUE === $this->referral_check() ) {
+			add_action('init', array($this, 'enqueueAdPosition'));
+		}
     }
     /**
      * Enqueues items in HEAD
      */
-    public function enqueueAdPosition() {
-        $this->cookieCheck();
+	public function enqueueAdPosition() {
+		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
+		add_action( 'wp_head', array($this, 'headerScript'), 10, '');
+		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
+		$this->set_cookie();
     }
     /**
      * Checks to see if they're coming from Informz or outside URL
      * and whether they got cookies
      */
-    public function cookieCheck() {
+    protected function referral_check() {
 		/**
 		 * If:
-		 *   No Cookie
-		 * or
-		 *   No Referer
-		 * or
-		 *   Coming from Informz
-		 * or
-		 *   On the site already
-		 * or
+		 *   No Cookie                   or
+		 *   Coming from Informz         or
+		 *   On the site already         or
 		 *   Coming from Transition Page
-		 *
-		 * Exit
+		 * then
+		 *   FALSE
+		 * Else
+		 *   TRUE
 		 */
 		if (
-			NULL !== $this->visitCookie ||
-			NULL === $this->referringURL ||
+			$this->visitCookie !== NULL ||
 			preg_match( "/epgmediallc\.informz\.net/", $this->referringURL ) ||
 			preg_match( "/powersportsbusiness\.com/", $this->referringURL ) ||
 			preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL )
 		) {
 
-			return;
+			return FALSE;
         }
 
-		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
-		add_action( 'wp_head', array($this, 'headerScript'), 10, '');
-		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
+		return TRUE;
     }
+
+	protected function set_cookie() {
+		// Ad cookie
+		setcookie(
+			'seenAdPsb',
+			TRUE,
+			time()+(60*60*6),
+			COOKIEPATH,
+			COOKIE_DOMAIN,
+			FALSE
+		);
+	}
 
 	public function print_to_foot() {
 
@@ -95,7 +107,7 @@ class epg_interstitial_ads {
 
 	}
 
-    public function headerScript() {
+	public function headerScript() {
         echo "
             <script type='text/javascript'>
 
@@ -132,7 +144,7 @@ class epg_interstitial_ads {
         return;
     }
 
-    public function adPosition() {
+	public function adPosition() {
         echo "<div class='interstitialAd'>
                 <div class='head'>
                     <div>
