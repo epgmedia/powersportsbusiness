@@ -98,6 +98,12 @@ class epg_interstitial_ads {
 			COOKIE_DOMAIN,
 			FALSE
 		);
+
+		// Remove "SeenAd" cookie
+		if ($_GET['unsetCookie'] && is_admin()) {
+			setcookie( "seenAdPsb", TRUE, time()-43600, COOKIEPATH, COOKIE_DOMAIN, false );
+		}
+
 	}
 
 	public function print_to_foot() {
