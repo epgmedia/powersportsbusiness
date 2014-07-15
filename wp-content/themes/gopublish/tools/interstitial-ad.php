@@ -76,7 +76,7 @@ class epg_interstitial_ads {
 		 *   FALSE
 		 */
 		if (
-			0 < $this->visitCookie &&
+			time() > $this->visitCookie &&
 			! preg_match( "/powersportsbusiness\.com/", $this->referringURL ) &&
 			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL &&
 			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )  )
@@ -89,11 +89,14 @@ class epg_interstitial_ads {
     }
 
 	protected function set_cookie() {
+		// Time cookie was set
+		$set_time = time()+(60*60*6);
+
 		// Ad cookie
 		setcookie(
 			'interstitial_ad_psb',
-			time()+(60*60*6),
-			time()+(60*60*6),
+			$set_time,
+			$set_time,
 			COOKIEPATH,
 			COOKIE_DOMAIN,
 			FALSE
@@ -101,7 +104,7 @@ class epg_interstitial_ads {
 
 		// Remove "SeenAd" cookie
 		if ($_GET['unsetCookie'] && is_admin()) {
-			setcookie( "seenAdPsb", TRUE, time()-43600, COOKIEPATH, COOKIE_DOMAIN, false );
+			setcookie( "interstitial_ad_psb", TRUE, time()-(60*60), COOKIEPATH, COOKIE_DOMAIN, false );
 		}
 
 	}
