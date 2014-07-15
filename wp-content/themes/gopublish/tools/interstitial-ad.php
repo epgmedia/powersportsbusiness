@@ -42,8 +42,8 @@ class epg_interstitial_ads {
         if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
             $this->referringURL = $_SERVER['HTTP_REFERER'];
         }
-        if ( isset( $_COOKIE['seenAdPsb'] ) ) {
-            $this->visitCookie = $_COOKIE['seenAdPsb'];
+        if ( isset( $_COOKIE['interstitial_ad_psb'] ) ) {
+            $this->visitCookie = $_COOKIE['interstitial_ad_psb'];
         }
 
 		if ( TRUE === $this->referral_check() ) {
@@ -76,7 +76,7 @@ class epg_interstitial_ads {
 		 *   FALSE
 		 */
 		if (
-			$this->visitCookie !== NULL &&
+			TRUE !== $this->visitCookie &&
 			!preg_match( "/powersportsbusiness\.com/", $this->referringURL ) &&
 			!preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL &&
 			!preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )  )
@@ -91,7 +91,7 @@ class epg_interstitial_ads {
 	protected function set_cookie() {
 		// Ad cookie
 		setcookie(
-			'seenAdPsb',
+			'interstitial_ad_psb',
 			TRUE,
 			time()+(60*60*6),
 			COOKIEPATH,
