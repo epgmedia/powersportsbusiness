@@ -46,6 +46,8 @@ class epg_interstitial_ads {
             $this->visitCookie = $_COOKIE['interstitial_ad_psb'];
         }
 
+		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
+
 		if ( TRUE === $this->referral_check() ) {
 			add_action('init', array($this, 'enqueueAdPosition'));
 		}
@@ -54,7 +56,6 @@ class epg_interstitial_ads {
      * Enqueues items in HEAD
      */
 	public function enqueueAdPosition() {
-		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
 		add_action( 'wp_head', array($this, 'headerScript'), 10, '');
 		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
 		$this->set_cookie();
@@ -76,7 +77,7 @@ class epg_interstitial_ads {
 		 *   FALSE
 		 */
 		if (
-			time() > $this->visitCookie &&
+			( time() >= $this->visitCookie ) &&
 			! preg_match( "/powersportsbusiness\.com/", $this->referringURL ) &&
 			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL &&
 			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )  )
