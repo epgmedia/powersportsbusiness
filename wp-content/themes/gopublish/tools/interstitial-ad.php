@@ -77,10 +77,10 @@ class epg_interstitial_ads {
 		 *   FALSE
 		 */
 		if (
-			( time() >= $this->visitCookie ) &&
+			time() >= $this->visitCookie &&
 			! preg_match( "/powersportsbusiness\.com/", $this->referringURL ) &&
-			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL &&
-			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )  )
+			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL ) &&
+			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )
 		) {
 
 			return TRUE;
@@ -134,7 +134,7 @@ class epg_interstitial_ads {
                 	var ad = '.interstitialAd';
                     $('#closeInterstitial').click(function() {
                         $(ad).hide();
-                    })
+                    });
                     var e = $('#countdownRedirect').html();
                     if( ! e ) {
                         throw new Error('COUNTDOWN_REDIRECT element id not found');
@@ -163,7 +163,7 @@ class epg_interstitial_ads {
                         <img src='http://epgmedia.s3.amazonaws.com/email/powersportsbusiness/enewsletter/2013/images/PSBRedirectheader.jpeg' width='400' alt='PowersportsBusiness.com' />
                     </div>
                     <div>
-                        <span>You will automatically be redirected in <span class='counter' id='countdownRedirect'>15</span> seconds. <a id='closeInterstitial'>Click here to proceed</a>.</span>
+                        <span>You will automatically be redirected in <span class='counter' id='countdownRedirect'>10</span> seconds. <a id='closeInterstitial'>Click here to proceed</a>.</span>
                     </div>
                 </div>
                 <!-- PSB_ROS_Roadblock -->

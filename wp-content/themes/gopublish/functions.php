@@ -3,15 +3,8 @@
  * Theme Functions
  */
 
-// Ad cookie
-setcookie( 'seenAdPsb', TRUE, time()+(60*60*6), COOKIEPATH, COOKIE_DOMAIN, false );
-
-if ($_GET['unsetCookie'] && is_admin()) {
-    setcookie( "seenAdPsb", TRUE, time()-43600, COOKIEPATH, COOKIE_DOMAIN, false );
-}
-
 /** Interstitial Ads */
-include(TEMPLATEPATH . "/tools/interstitial-ad.php");
+//include(TEMPLATEPATH . "/tools/interstitial-ad.php");
 
 /** Wallpaper Ads */
 include(TEMPLATEPATH . "/tools/wallpaper-ad.php");
@@ -176,27 +169,38 @@ register_sidebars( 1,
 
 // turns a category ID to a Name
 function cat_id_to_name($id) {
-	foreach((array)(get_categories()) as $category) {
-    	if ($id == $category->cat_ID) { return $category->cat_name; break; }
+	foreach( (array)( get_categories() ) as $category ) {
+    	if ( $id == $category->cat_ID ) {
+			return $category->cat_name;
+			break;
+		}
 	}
 }
 // turns a category ID to a Slug
 function cat_id_to_slug($id) {
 	foreach((array)(get_categories()) as $category) {
-    	if ($id == $category->cat_ID) { return $category->category_nicename; break; }
+    	if ( $id == $category->cat_ID ) {
+			return $category->category_nicename;
+			break;
+		}
 	}
 }
 // turns a page ID to a Name
 function page_id_to_name($id) {
-    	if ($id == $page->page_ID) { return $page->page_name; break; }
+	global $page;
+	if ( $id == $page->page_ID ) {
+		return $page->page_name;
+	}
 }
 
 	include(TEMPLATEPATH."/tools/enews.php");
 	include(TEMPLATEPATH."/tools/snotext.php");
+/*
 	include(TEMPLATEPATH."/tools/audio.php");
 	include(TEMPLATEPATH."/tools/video.php");
 	include(TEMPLATEPATH."/tools/videoembed.php");
 	include(TEMPLATEPATH."/tools/advertisement.php");
+*/
 	include(TEMPLATEPATH."/tools/categorywidget.php");
 	include(TEMPLATEPATH."/tools/productshowcase.php");
 	include(TEMPLATEPATH."/tools/pagewidget.php"); 
