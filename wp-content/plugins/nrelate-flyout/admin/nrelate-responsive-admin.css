@@ -308,10 +308,8 @@ h2.nrelate-title a {
 #style-gallery .style-image {
 	display: block;
 	margin: 0 0 0 15px;
-	}
-#style-gallery a.nrelate_preview_button {
-    float: left;
-    width: 380px;
+	float: left;
+	width: 380px;
 	}
 #style-gallery a:hover img {
 	filter:alpha(opacity=50);
@@ -350,7 +348,7 @@ h2.nrelate-title a {
 	background-image: url("images/help.png");
 	background-repeat: no-repeat;
 	display: block;
-	cursor: help;
+	cursor: pointer;
 	text-indent: -99999px;
 	width: 16px;
 	filter: alpha(opacity=100); /* internet explorer */
@@ -364,7 +362,7 @@ h2.nrelate-title a {
 	padding: 10px 0 0;
 	position: absolute;
 	right: -10px;
-	top: 0;
+	top: 11px;
 	}
 	
 .ui-tooltip-nrelate  .ui-tooltip-titlebar, .ui-tooltip-nrelate .ui-tooltip-content {
@@ -385,10 +383,10 @@ h2.nrelate-title a {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	font-size: 20px;
+	font-size: 18px;
 	max-width: 60% !important;
 	min-width: 20% !important;
-	line-height: 120% !important;
+	line-height: 1.5em !important;
 }
  
    .ui-tooltip-nrelate.ui-tooltip-titlebar{

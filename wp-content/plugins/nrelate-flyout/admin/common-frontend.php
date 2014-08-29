@@ -31,11 +31,7 @@ function nrelate_jquery_styles() {
     $nsquared_load=(nrelate_nsquared_is_loading()? 1:0);
     
   if ($related_load || $popular_load || $flyout_load || $nsquared_load) {
-
-  // Load Common CSS
-  wp_register_style('nrelate-style-common-' . str_replace(".","-",NRELATE_PLUGIN_VERSION), NRELATE_CSS_URL . 'nrelate-panels-common.min.css', array(), NRELATE_PLUGIN_VERSION );
-  wp_enqueue_style( 'nrelate-style-common-' . str_replace(".","-",NRELATE_PLUGIN_VERSION) );
-      
+  
   $options=get_option('nrelate_products');
   if(isset($options["related"]["status"]) && $options["related"]["status"]){
     $rc_options=get_option('nrelate_related_options_ads');
@@ -61,6 +57,10 @@ add_action ('template_redirect', 'nrelate_jquery_styles');
  * Init JS plugins options
  */
 function nrelate_init_plugins() {
+  if ( defined( 'NRELATE_JS_INITIALIZED' ) ) {
+    return false;
+  }
+
   $plugins = array( "related" => false, "popular" => false, "flyout" => false, "nsquared" => false );
 
   foreach ($plugins as $plugin => $load) {
@@ -93,9 +93,10 @@ function nrelate_init_plugins() {
         @list($cssstyle, $cols) = explode("-", str_replace("-text", "", $style_code) );
 
         $options["plugins"][$plugin] = array(
+          "pl_ver"      => $p_opts["{$plugin}_version"],
           "cssstyle"    => $cssstyle,
           "thumbsize"   => (int)$p_opts["{$plugin}_thumbnail_size"],
-          "widgetstyle"   => ( $p_opts["{$plugin}_thumbnail"] == "Thumbnails" ? 1 : 0 )
+          "widgetstyle" => ( $p_opts["{$plugin}_thumbnail"] == "Thumbnails" ? 1 : 0 )
         );
 
         if ( $cols ) {
@@ -147,8 +148,10 @@ function nrelate_init_plugins() {
       }
     }
 
-    if ( $options["plugins"] ) {
+    if ( !empty( $options["plugins"] ) ) {
       $json_options = htmlspecialchars( json_encode( $options ), ENT_QUOTES, 'UTF-8' );
+    } else {
+      $json_options = null;
     }
 
     $is_home = (string)(int) (is_home() || is_front_page());
@@ -163,8 +166,10 @@ function nrelate_init_plugins() {
   <script type="text/javascript">var nr_domain = "$domain", nr_is_home = {$is_home}{$nr_pageurl_init};</script>
   <script async type="text/javascript" id="nrelate_loader_script" data-nrelate-options="$json_options" src="$loader_url"></script>
 EOD;
-
+    
     echo $markup;
+
+    define( 'NRELATE_JS_INITIALIZED', true );
   }
 }
 

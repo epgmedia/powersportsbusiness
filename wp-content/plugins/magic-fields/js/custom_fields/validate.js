@@ -7,10 +7,11 @@
   			errorClass: "error_magicfields",
 			  
 			  
-  			/* submitHandler: function(form) {
+  			submitHandler: function(form) {
   			  $('#mf-publish-errors').remove();
+          $(window).off( 'beforeunload.edit-post' );
           form.submit();
-  		  }, */
+  		  },
 		  
   			invalidHandler: function(form, validator) {
           

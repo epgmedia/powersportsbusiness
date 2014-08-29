@@ -3,29 +3,27 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate.php
 Tags: calendar, dates, times, events, scheduling, event manager, event calendar
 Requires at least: 3.4.2
-Tested up to: 3.8.2
+Tested up to: 3.9.1
 License: GPLv2 or later
-Stable tag: 2.3.0
+Stable tag: 2.3.9
 
 Accessible WordPress event calendar plugin. Show events from multiple calendars on pages, in posts, or in widgets.
 
 == Description ==
 
-My Calendar provides event management with richly customizable ways to display events. The plug-in can support individual event calendars within WordPress Multisite, multiple calendars displayed by categories, locations or author, or simple lists of upcoming events. 
+My Calendar does WordPress event management with richly customizable ways to display events. The plug-in supports individual event calendars within WordPress Multisite, multiple calendars displayed by categories, locations or author, or simple lists of upcoming events. 
 
 Easy to use for anybody, My Calendar provides enormous potential for developers needing a custom calendar interface.
 
 * 	[Buy the User's Guide](http://www.joedolson.com/articles/my-calendar/users-guide/) for extensive help with set up and use.
 *   [Buy My Calendar: Submissions](https://www.joedolson.com/articles/my-calendar/submissions/), the PRO extension for front-end event submissions
 
-= Basic Features: =
+= Features: =
 
 *	Standard calendar grid and list views of events
 * 	Show events in monthly, weekly, or daily view.
 * 	Mini-calendar view for compact displays (as widget or as shortcode)
-*	Widget to show today's events
-*	Widget to show upcoming or past events 
-* 	Event Search widget
+*	Widgets: today's events, upcoming events, compact calendar, event search
 *	Custom templates for event output
 *	Limit views by categories, location, author, or host
 *	Disable default CSS and default JavaScript or display only on specific Pages/Posts
@@ -37,7 +35,7 @@ Easy to use for anybody, My Calendar provides enormous potential for developers 
 * 	Post to Twitter when events are created. (with [WP to Twitter](http://wordpress.org/extend/plugins/wp-to-twitter/))
 *	Location Manager for frequently used venues
 *   Fetch events from a remote MySQL database. (Sharing events in a network of sites.)
-*   Import from [Kieran O'Shea's Calendar plugin](http://wordpress.org/extend/plugins/calendar/)
+*   Import events from [Kieran O'Shea's Calendar plugin](http://wordpress.org/extend/plugins/calendar/)
 * 	Integrated Help page to guide in use of shortcodes and template tags
 * 	Shortcode Generator to help create customized views of My Calendar
 *   [Developer Documentation](http://www.joedolson.com/articles/doc-category/my-calendar-3/)
@@ -45,7 +43,7 @@ Easy to use for anybody, My Calendar provides enormous potential for developers 
 = Translations =
 
 Available languages (in order of completeness):
-French, Japanese, Dutch, German, Galician, Spanish, Italian, Danish, Czech, Hindi, Turkish, Finnish, Slovenian, Polish, Portuguese, Russian, Swedish, Romanian, Basque, Persian
+French, Japanese, Danish, Dutch, Russian, German, Italian, Galician, Spanish, Danish, Czech, Hindi, Turkish, Polish, Finnish, Slovenian, Portuguese, Swedish, Romanian, Basque, Persian
 
 Visit the [My Calendar translations site](http://translate.joedolson.com/projects/my-calendar) to check the progress of a translation.
 
@@ -76,6 +74,97 @@ Translating my plug-ins is always appreciated. Visit <a href="http://translate.j
    with shortcode options or widget configuration.
 
 == Changelog ==
+
+= 2.3.10 =
+
+* New filter: mc_jumpbox_future_years - alter the number of years into the future shown in the calendar date switcher.
+* New filter: mc_add_events_url - alter URL for Add Events in adminbar; return URL
+* New filter: mc_locate_events_page: alter menu parent of Add Events in admin menu; return menu slug or null
+* Bug fix: ltype and lvalue not passed from shortcode into handler for upcoming events.
+* Bug fix: disable comments by default for event post storage.
+* Bug fix: misnamed variable in filter; resolves notice on line 239 of my-calendar-output.php
+* Added template tag: {linking_title}; same as {link_title}, but falls back to details link if no URL input for event.
+* Change default widget template to use {linking_title}.
+* Security: Two XSS vulnerabilities fixed. Thanks <a href="http://www.timhurley.net/">Tim Hurley</a>
+* Update Translation: Russian
+
+= 2.3.9 =
+
+* Bug fix: Minor event templates ( title, detail, etc. ) were not properly escaped in admin forms.
+* Bug fix: use reply-to email header in support messages
+* Bug fix: Mass approval of pending events broken.
+* Bug fix: {linking} template tag referenced wrong event URL.
+* Bug fix: My Calendar API RSS no longer dependent on default RSS data.
+* Bug fix: Replace mysql_* functions for PHP 5.5 compatibility.
+* Bug fix: Incorrect template tag in Single view template: {gcal} instead of {gcal_link}
+* Bug fix: PHP notice on $map
+* Language updates: Japanese, German, Italian
+
+= 2.3.8 =
+
+* Added {link_image} to add an image linked to the event URL in templates.
+* Bug fix: extended caption value saved but not shown.
+* Bug fix: For multi-day events ending at midnight, last date automatically extended one day at save.
+* Bug fix: on copy, if start date is changed, but end date isn't, increment end date to match length of original event.
+* Change: Eliminate error on empty title fields or invalid recurrence values. Set to default value instead. 
+
+= 2.3.7 =
+
+* Did not enqueue jQuery on front-end unless Google Maps was enabled. (Incorrect condition nesting...) Whoops.
+
+= 2.3.6 =
+
+* Error in yesterday's bug fix for upcoming events. 
+* Bug fix: Email notifications broken.
+
+= 2.3.5 =
+
+* Bug fix: Notice in today's events widget
+* Bug fix: Images from pre 2.3.0 configuration did not display in default Single event view.
+* Bug fix: Upcoming events list could return too few events.
+* Bug fix: Display default date format if format not set.
+* Bug fix: Fallback to default JS if custom JS not defined.
+* Filter: added filter to Google Maps code; mc_gmap_html
+* Option: enabled option to disable Google Maps output.
+
+= 2.3.4 =
+
+* Bug fix: Week date format wouldn't save.
+* Bug fix: Event posts & custom field data not saved on copy action
+* Bug fix: HTML errors in {hcard} address format.
+* Bug fix: Manage events search form overlapped pagination links
+* Bug fix: Events ending at midnight in Today's Events lists appeared twice
+
+= 2.3.3 =
+
+* Bug fix: Notice on access_options filter.
+* Bug fix: Invalid date values if no parameters set for iCal
+* Bug fix: Invalid nonce check in location entry prevented creation of new locations. One missing exclamation point. Sigh.
+* Bug fix: If location controls are on, allow old values to be saved, but raise notice that value is not part of controlled set.
+* Feature: add sync=true to root iCal URL to connect apps for scheduled syncing. (http://example.com/feeds/my-calendar-ics/?sync=true)
+* Updated: Polish translation
+
+= 2.3.2 =
+
+* Bug fix: label change to clarify entry format for location controls
+* Bug fix: Missing end tag on <time> element
+* Bug fix: my_calendar_search_title can handle missing 2nd argument
+* Bug fix: Add "active" class span on time toggle active case.
+* Bug fix: Recurring all-day events showing twice
+* Bug fix: Non-editable fields for date/time input broke occurrences & restricted time options
+* Bug fix: Category filtering broken when holiday categories enabled
+* Bug fix: Double check whether categories exist and throw error if not, after attempting to create default category.
+* Feature: Mass delete locations
+
+= 2.3.1 =
+
+* Bug fix: PHP warning on event save
+* Bug fix: PHP Notices generated on deleted author/host value.
+* Bug fix: Pop-up calendar for date entry had incorrect day labels
+* Bug fix: Editing individual date instances issues.
+* Bug fix: {image} fallback for pre 2.3.0 uploaded images
+* Added: secondary sort filter for main calendar views; default event_title ASC. Field and direction must be provided to change.
+* Updated my-calendar.pot
 
 = 2.3.0 =
 
@@ -1173,9 +1262,9 @@ Because the majority of users end up on my web site asking for help anyway -- an
 
 I can! Just not in person. I've written a User's Guide for My Calendar, which you can [purchase at my web site](https://www.joedolson.com/articles/my-calendar/users-guide/) for $25. This helps defray the thousand plus hours I've spent in developing the plug-in and providing support. Please, consider buying the User's Guide or [making a donation](https://www.joedolson.com/donate.php) before asking for support!
 
-= How can my site visitors or members submit events? =
+= Can my visitors or members submit events? =
 
-I've written a paid plug-in that adds this feature to My Calendar, called My Calendar: Submissions. You can [buy it at my web site](https://www.joedolson.com/articles/my-calendar/submissions/)!
+I've written a paid plug-in that adds this feature to My Calendar, called My Calendar: Submissions. [Buy it today](https://www.joedolson.com/articles/my-calendar/submissions/)!
 
 == Screenshots ==
 
@@ -1192,6 +1281,6 @@ I've written a paid plug-in that adds this feature to My Calendar, called My Cal
 
 == Upgrade Notice ==
 
-= 2.3.0 =
+= 2.3.10 =
 
-This is a MAJOR update. Be sure to backup!
+IMPORTANT SECURITY UPDATE: Please upgrade as soon as possible!

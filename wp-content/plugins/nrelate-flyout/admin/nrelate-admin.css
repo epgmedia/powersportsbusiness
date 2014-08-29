@@ -310,10 +310,8 @@ padding: 4px 20px 6px;
 #style-gallery .style-image {
 	display: block;
 	margin: 0 0 0 15px;
-	}
-#style-gallery a.nrelate_preview_button {
-    float: left;
-    width: 380px;
+	float: left;
+	width: 380px;
 	}
 #style-gallery a:hover img {
 	filter:alpha(opacity=50);

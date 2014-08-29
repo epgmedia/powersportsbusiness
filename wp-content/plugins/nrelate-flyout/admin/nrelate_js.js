@@ -513,6 +513,11 @@ if ( typeof nRelate == 'undefined' ) {
 							nr_div_number 	: i,
 							pr_id			: this.get_print_id()
 						});
+
+						// For WP plugins, send installed plugin version
+						if ( this.options.plugins[ p ].pl_ver ) {
+							url = this.aurlp( url, { pl_ver : this.options.plugins[ p ].pl_ver } );
+						}
 						
 						// Add the HTTP_REFERRER if supported
 						if( 'referrer' in document && document.referrer ) { 
@@ -654,9 +659,6 @@ if ( typeof nRelate == 'undefined' ) {
 						url = this.aurlp( url, { v: plugin.cssversion } );
 						this.debug("Loading custom style from %o",url);						
 						this.lr( url, 'nrelate-' + slug + 'custom-style', { type: 'css', callback: this.fah } );
-
-					} else if ( plugin.cssstyle != 'none' ) {
-						this.lr( this.options.default_stylesheet_url, "nrelate-styles", { type: 'css', callback: this.fah } );
 					}
 				}
 
@@ -2745,7 +2747,8 @@ if ( typeof nRelate == 'undefined' ) {
 				page_type_id 		: null,
 				page_type 			: null,
 				geo 				: null,
-				article_id 			: null
+				article_id 			: null,
+				pl_ver				: null 	// For WP plugins
 			}
 		};
 		

@@ -6,7 +6,7 @@ function mc_settings_field( $name, $label, $default='', $note='', $atts=array( '
 	if ( is_array( $atts ) && !empty( $atts ) ) {
 		foreach ( $atts as $key => $value ) { $attributes .= " $key='$value'"; }
 	}
-	$value = ( get_option( $name ) != '' ) ? stripslashes( esc_attr( get_option( $name ) ) ) : $default ;	
+	$value = ( get_option( $name ) != '' ) ? esc_attr( stripslashes( get_option( $name ) ) ) : $default ;	
 	switch ( $type ) {
 		case 'text':
 		case 'url':
@@ -111,8 +111,8 @@ function my_calendar_import() {
 		$cats = $mcdb->get_results("SELECT * FROM " . KO_CALENDAR_CATS, 'ARRAY_A');	
 		$catsql = "";
 		foreach ( $cats as $key ) {
-			$name = mysql_real_escape_string($key['category_name']);
-			$color = mysql_real_escape_string($key['category_colour']);
+			$name = esc_sql($key['category_name']);
+			$color = esc_sql($key['category_colour']);
 			$id = (int) $key['category_id'];
 			$catsql = "INSERT INTO " . my_calendar_categories_table() . " SET 
 				category_id='".$id."',
@@ -238,6 +238,7 @@ function edit_my_calendar_config() {
 		update_option( 'mc_bottomnav', implode( ',' ,$bottom ) );
 		update_option( 'mc_topnav', implode( ',' ,$top ) );
 		update_option('mc_show_map',( !empty($_POST['mc_show_map']) && $_POST['mc_show_map']=='on')?'true':'false');
+		update_option('mc_gmap',( !empty($_POST['mc_gmap']) && $_POST['mc_gmap']=='on')?'true':'false');
 		update_option('mc_show_address',( !empty($_POST['mc_show_address']) && $_POST['mc_show_address']=='on')?'true':'false'); 
 		update_option('mc_hide_icons',( !empty($_POST['mc_hide_icons']) && $_POST['mc_hide_icons']=='on')?'true':'false');
 		update_option('mc_event_link_expires',( !empty($_POST['mc_event_link_expires']) && $_POST['mc_event_link_expires']=='on')?'true':'false');
@@ -256,10 +257,10 @@ function edit_my_calendar_config() {
 	}
 	// input
 	if ( isset($_POST['mc_dates']) ) {
-		update_option('mc_date_format',stripslashes($_POST['mc_date_format']));
-		update_option('mc_week_format',stripslashes($_POST['my_calendar_week_format']));
-		update_option('mc_time_format',stripslashes($_POST['mc_time_format']));
-		update_option('mc_month_format',stripslashes($_POST['mc_month_format']));
+		update_option( 'mc_date_format',stripslashes( $_POST['mc_date_format'] ) );
+		update_option( 'mc_week_format',stripslashes( $_POST['mc_week_format'] ) );
+		update_option( 'mc_time_format',stripslashes( $_POST['mc_time_format'] ) );
+		update_option( 'mc_month_format',stripslashes( $_POST['mc_month_format'] ) );
 		$mc_ical_utc = ( !empty($_POST['mc_ical_utc']) && $_POST['mc_ical_utc']=='on')?'true':'false';
 		update_option('mc_ical_utc',$mc_ical_utc);		
 		echo "<div class=\"updated\"><p><strong>".__( 'Date/Time Format Settings saved','my-calendar' )."</strong></p></div>";		
@@ -304,18 +305,18 @@ function edit_my_calendar_config() {
 		$mc_event_open = $_POST['mc_event_open'];
 		$mc_event_closed = $_POST['mc_event_closed'];
 		$mc_week_caption = $_POST['mc_week_caption'];
-		$my_calendar_caption = $_POST['my_calendar_caption'];
+		$mc_caption = $_POST['mc_caption'];
 		$templates = get_option('mc_templates');
 		$templates['title'] = $mc_title_template;
 		$templates['label'] = $mc_details_label;
-		$templates['link'] = $mc_link_label;	
+		$templates['link'] = $mc_link_label;
 		update_option( 'mc_templates',$templates);
 		update_option( 'mc_event_title_template', $mc_event_title_template );
 		update_option( 'mc_notime_text',$mc_notime_text );
 		update_option( 'mc_week_caption',$mc_week_caption );
 		update_option( 'mc_next_events',$mc_next_events );
 		update_option( 'mc_previous_events',$mc_previous_events );
-		update_option( 'mc_caption',$my_calendar_caption );
+		update_option( 'mc_caption',$mc_caption );
 		update_option( 'mc_event_open',$mc_event_open );
 		update_option( 'mc_event_closed',$mc_event_closed );
 		echo "<div class=\"updated\"><p><strong>".__( 'Custom text settings saved','my-calendar' ).".</strong></p></div>";	 
@@ -342,9 +343,9 @@ function edit_my_calendar_config() {
 	
 	// pull templates for passing into functions.
 	$templates = get_option('mc_templates');
-	$mc_title_template = $templates['title'];
-	$mc_details_label = $templates['label'];
-	$mc_link_label = $templates['link'];
+	$mc_title_template = esc_attr( stripslashes( $templates['title'] ) );
+	$mc_details_label = esc_attr( stripslashes( $templates['label'] ) );
+	$mc_link_label = esc_attr( stripslashes( $templates['link'] ) );
 ?> 
 
 <div class="wrap jd-my-calendar mc-settings-page" id="mc_settings">
@@ -465,7 +466,7 @@ if ( get_option( 'ko_calendar_imported' ) != 'true' ) {
 	<li><?php mc_settings_field( 'mc_event_open', __( 'If events are open','my-calendar' ), __( 'Registration is open','my-calendar' ) ); ?></li>
 	<li><?php mc_settings_field( 'mc_event_closed', __( 'If events are closed','my-calendar' ), __( 'Registration is closed','my-calendar' ) ); ?></li>	
 	<li><?php mc_settings_field( 'mc_week_caption', __( 'Week view caption:','my-calendar' ), '', __( 'Available tag: <code>{date format=""}</code>','my-calendar' ) ); ?></li>
-	<li><?php mc_settings_field( 'my_calendar_caption', __( 'Extended caption:','my-calendar' ), '', __( 'Follows month/year in list views.','my-calendar' ) ); ?></li>
+	<li><?php mc_settings_field( 'mc_caption', __( 'Extended caption:','my-calendar' ), '', __( 'Follows month/year in list views.','my-calendar' ) ); ?></li>
 	<li><?php mc_settings_field( 'mc_title_template', __( 'Event title template','my-calendar' ), $mc_title_template, "<a href='".admin_url("admin.php?page=my-calendar-help#templates")."'>".__( "Templating Help",'my-calendar' ).'</a>' ); ?></li>
 	<li><?php mc_settings_field( 'mc_details_label', __( 'Event details link text','my-calendar' ), $mc_details_label, __( 'Tags: <code>{title}</code>, <code>{location}</code>, <code>{color}</code>, <code>{icon}</code>, <code>{date}</code>, <code>{time}</code>.','my-calendar' ) ); ?></li>
 	<li><?php mc_settings_field( 'mc_link_label', __( 'Event URL link text','my-calendar' ), $mc_link_label, "<a href='".admin_url("admin.php?page=my-calendar-help#templates")."'>".__( "Templating Help",'my-calendar' ).'</a>' ); ?></li>
@@ -566,6 +567,7 @@ if ( get_option( 'ko_calendar_imported' ) != 'true' ) {
 			<li><?php mc_settings_field( 'mc_show_gcal', __( 'Link to submit event to Google Calendar','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>		
 			<li><?php mc_settings_field( 'mc_hide_icons', __( 'Hide Category icons','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>
 			<li><?php mc_settings_field( 'mc_show_map', __( 'Link to Google Map','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>
+			<li><?php mc_settings_field( 'mc_gmap', __( 'Google Map (single event view only)','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>			
 			<li><?php mc_settings_field( 'mc_show_address', __( 'Event Address','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>
 			<li><?php mc_settings_field( 'mc_short', __( 'Short description','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>
 			<li><?php mc_settings_field( 'mc_desc', __( 'Full description','my-calendar' ), '', '', array(), 'checkbox-single' ); ?></li>

@@ -48,7 +48,7 @@ $single_template = addslashes( '<span class="event-time dtstart" title="{dtstart
 <div class="sub-details">
 {hcard}
 <div class="mc-description">{image}{description}</div>
-<p>{ical_html} &bull; {gcal}</p>
+<p>{ical_html} &bull; {gcal_link}</p>
 {map}
 <p><a href="{linking}" class="event-link external">{title}</a></p></div>' );
 
@@ -143,7 +143,7 @@ $initial_minijs = '$(function() {
 	 });
 });';
 
-$default_template = "<strong>{date}</strong> &#8211; {link_title}<br /><span>{time}, {category}</span>";
+$default_template = '<strong>{timerange}, {date}</strong> &#8211; {linking_title}';
 $charset_collate = ''; 
 if ( ! empty( $wpdb->charset ) ) {
 	$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";

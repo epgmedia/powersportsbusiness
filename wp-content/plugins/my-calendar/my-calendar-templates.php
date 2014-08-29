@@ -39,7 +39,7 @@ function jd_draw_template( $array,$template,$type='list' ) {
 				$template = stripcslashes(str_replace($rss_search,$value,$template));
 			}				
 		} 
-	}		
+	}
 	return stripslashes(trim($template));
 }
 
@@ -109,25 +109,27 @@ function mc_hcard( $event, $address='true', $map='true', $source='event', $conte
 	$country = stripslashes( ( $source=='event' ) ? $event->event_country : $event->location_country );
 	$phone = stripslashes( ( $source=='event' ) ? $event->event_phone : $event->location_phone );
 	if ( !$url && !$label && !$street && !$street2 && !$city && !$state && !$zip && !$country && !$phone ) return;
-	$sitelink_html = ( $url != '' ) ? "<a href='$url' class='location-link external'>$label</a>" : $label;
+	$link = ( $url != '' ) ? "<a href='$url' class='location-link external'>$label</a>" : $label;
 	$hcard = "<div class=\"address vcard\">";
 	if ( $address == 'true' ) {
 		$hcard .= "<div class=\"adr\">";
-		if ( $label != "" ) { $hcard .= "<strong class=\"org\">".$sitelink_html."</strong><br />";	}
-		$hcard .= ( $street.$street2.$city.$state.$zip.$country.$phone == '' ) ? '' : "<div class='sub-address'>";
-		if ( $street != "" ) { $hcard .= "<div class=\"street-address\">".$street."</div>"; }
-		if ( $street2 != "" ) {	$hcard .= "<div class=\"street-address\">".$street2."</div>";	}
-		if ( $city != "" ) { $hcard .= "<div><span class=\"locality\">".$city."</span><span class='sep'>, </span>"; }
-		if ( $state != "" ) { $hcard .= "<span class=\"region\">".$state."</span> "; }
-		if ( $zip != "" ) { $hcard .= " <span class=\"postal-code\">".$zip."</span></div>"; }	
-		if ( $country != "" ) {	$hcard .= "<div class=\"country-name\">".$country."</div>"; }
-		if ( $phone != "" ) { $hcard .= "<div class=\"tel\">".$phone."</div>"; }
-		$hcard .= ( $street.$street2.$city.$state.$zip.$country.$phone == '' ) ? '' : "</div>";
+			$hcard .= ( $label != '' ) ? "<strong class=\"org\">".$link."</strong><br />" : '';
+			$hcard .= ( $street.$street2.$city.$state.$zip.$country.$phone == '' ) ? '' : "<div class='sub-address'>";
+			$hcard .= ( $street != "" ) ? "<div class=\"street-address\">".$street."</div>" : '';
+			$hcard .= ( $street2 != "" ) ? "<div class=\"street-address\">".$street2."</div>" : '';
+			$hcard .= ( $city.$state.$zip != '' ) ? "<div>" : '';
+			$hcard .= ( $city != "" ) ? "<span class=\"locality\">".$city."</span><span class='sep'>, </span>" : '';
+			$hcard .= ( $state != "" ) ? "<span class=\"region\">".$state."</span> " : '';
+			$hcard .= ( $zip != "" ) ? " <span class=\"postal-code\">".$zip."</span>" : '';
+			$hcard .= ( $city.$state.$zip != '' ) ? "</div>" : '';			
+			$hcard .= ( $country != "" ) ? "<div class=\"country-name\">".$country."</div>" : '';
+			$hcard .= ( $phone != "" ) ? "<div class=\"tel\">".$phone."</div>" : '';
+			$hcard .= ( $street.$street2.$city.$state.$zip.$country.$phone == '' ) ? '' : "</div>";
 		$hcard .= "</div>";
 	}
 	if ( $map == 'true' ) {
-		$the_map = "<a href='$the_map' class='external'>".__('Map','my-calendar')."<span class='screen-reader-text'> $label</a></a>";
-		$hcard .= ( $the_map!='' ) ? "<div class='url map'>$the_map</div>" : '' ;
+		$the_map = "<a href='$the_map' class='external'>".__('Map','my-calendar')."<span class='screen-reader-text'> $label</span></a>";
+		$hcard .= ( $the_map != '' ) ? "<div class='url map'>$the_map</div>" : '' ;
 	}
 	$hcard .= "</div>";	
 	return $hcard;
@@ -154,6 +156,7 @@ function mc_create_tags( $event, $context='filters' ) {
 	$e['date_utc'] = date_i18n( apply_filters( 'mc_date_format', $date_format, 'template_begin_ts' ) , $event->ts_occur_begin );
 	$e['date_end_utc'] = date_i18n( apply_filters( 'mc_date_format', $date_format, 'template_end_ts' ) , $event->ts_occur_end );
 	$e['time'] = ( date( 'H:i:s', strtotime( $event->occur_begin ) ) == '00:00:00' )?get_option( 'mc_notime_text' ):date(get_option('mc_time_format'), strtotime( $event->occur_begin ) );
+	$e['time24'] = ( date( 'G:i', strtotime( $event->occur_begin ) ) == '00:00:00' ) ? get_option( 'mc_notime_text' ):date( get_option('mc_time_format'), strtotime( $event->occur_begin ) );
 	$endtime = date( 'H:i:s', strtotime($event->occur_end) );
 	$e['endtime'] = ( $event->occur_end == $event->occur_begin || $event->event_hide_end == 1 )?'':date_i18n( get_option('mc_time_format'),strtotime( $endtime ));
 	$tz = mc_user_timezone();
@@ -179,7 +182,7 @@ function mc_create_tags( $event, $context='filters' ) {
 	} else {
 		$dates = array();
 	}
-	$e['date'] = ($event->event_span != 1)?$date:mc_format_date_span( $dates, 'simple', $date );
+	$e['date'] = ( $event->event_span != 1 ) ? $date : mc_format_date_span( $dates, 'simple', $date );
 	$e['enddate'] = $date_end;
 	$e['daterange'] = ($date == $date_end)?$date:"<span class='mc_db'>$date</span> <span>&ndash;</span> <span class='mc_de'>$date_end</span>";
 	$e['timerange'] = ( ($e['time'] == $e['endtime'] ) || $event->event_hide_end == 1 )?$e['time']:"<span class='mc_tb'>".$e['time']."</span> <span>&ndash;</span> <span class='mc_te'>".$e['endtime']."</span>";
@@ -202,7 +205,7 @@ function mc_create_tags( $event, $context='filters' ) {
 	
 	// general text fields
 	$strip_desc = mc_newline_replace( strip_tags( $event->event_desc ) );	
-	$e['title'] = stripcslashes( $event->event_title );
+	$e['title'] = stripslashes( $event->event_title );
 	$e['description'] = ( get_option('mc_process_shortcodes') == 'true' && $context == 'filters' ) ? apply_filters( 'the_content', $event->event_desc ) : wpautop( stripslashes( $event->event_desc ) );
 	$e['description_raw'] = stripslashes($event->event_desc);
 	$e['description_stripped'] = strip_tags(stripslashes($event->event_desc));
@@ -224,11 +227,18 @@ function mc_create_tags( $event, $context='filters' ) {
 	//$e_label = mc_get_details_label( $event, $e ); // recursive...hmmmm.
 	$e_link = mc_get_details_link( $event );
 	$e['link'] = mc_event_link( $event );
-	$e['link_title'] = ($e['link'] != '')?"<a href='".$event->event_link."'>".stripslashes($event->event_title)."</a>":stripslashes($event->event_title);	
-	$e['details_link'] = ( get_option( 'mc_uri' ) != '' && !is_numeric( get_option('mc_uri') ) )?$e_link:'';
+	if ( $e['link'] ) {
+		$e['link_image'] = str_replace( "alt=''", "alt='".esc_attr( $e['title'] )."'", "<a href='".$e['link']."'>".$e['image']."</a>" );
+		$e['link_title'] = "<a href='".$event->event_link."'>". $e['title'] ."</a>";	
+	} else {
+		$e['link_image'] = $e['image'];
+		$e['link_title'] = $e['title'];
+	}
+	$e['details_link'] = ( get_option( 'mc_uri' ) != '' && !is_numeric( get_option('mc_uri') ) ) ? $e_link : '';
 	$e['details'] = ( get_option( 'mc_uri' ) != '' && !is_numeric( get_option('mc_uri') ) )?"<a href='$e_link' class='mc-details'>$e_label</a>":'';
-	$e['linking'] = ( $e['link'] != '' )?$event->event_url:$e_link;
-		
+	$e['linking'] = ( $e['link'] != '' ) ? $event->event_link : $e_link;
+	$e['linking_title'] = ( $e['linking'] != '' ) ? "<a href='".$e['linking']."'>". $e['title'] ."</a>" :  $e['title'] ;
+	
 	// location fields
 	$e['location'] = stripslashes($event->event_label);
 	$e['street'] = stripslashes($event->event_street);
@@ -243,7 +253,7 @@ function mc_create_tags( $event, $context='filters' ) {
 	$e['link_map'] = $map;
 	$e['map_url'] = $map_url;
 	$e['map'] = mc_generate_map( $event );
-		$url = ( get_option( 'mc_uri' ) != '' && !is_numeric( get_option( 'mc_uri' ) ) )?$e_link:$event->event_url;
+		$url = ( get_option( 'mc_uri' ) != '' && !is_numeric( get_option( 'mc_uri' ) ) ) ? $e_link : $event->event_url;
 	$e['gcal'] = mc_google_cal( $dtstart, $dtend, $url, stripcslashes( $event->event_title ), mc_maplink( $event, 'gcal' ), $strip_desc );
 	$e['gcal_link'] = "<a href='".mc_google_cal( $dtstart, $dtend, $url, stripcslashes( $event->event_title ) ,  mc_maplink( $event, 'gcal' ), $strip_desc )."'>".sprintf( __('<span class="screen-reader-text">Send %1$s to </span>Google Calendar','my-calendar'), stripcslashes( $event->event_title ) )."</a>";
 	$e['location_access'] = mc_expand( unserialize( mc_location_data( 'location_access', $event->event_location ) ) );
@@ -381,7 +391,7 @@ function mc_generate_map( $event, $source='event' ) {
 	})(jQuery);
 </script>
 	<div id='mc_gmap_$id' class='mc-gmap-fupup'$styles></div>";
-	return $value;
+	return apply_filters( 'mc_gmap_html', $value, $event );
 }
 
 function mc_expand( $data ) {
@@ -452,14 +462,18 @@ function mc_author_data( $e, $event ) {
 	if ( $event->event_author != 0 ) {
 		$author = get_userdata($event->event_author);
 		$host = get_userdata($event->event_host);
-		$e['author'] = $author->display_name;
-		$e['gravatar'] = get_avatar( $author->user_email );
-		$e['author_email'] = $author->user_email;
-		$e['author_id'] = $event->event_author;
-		$e['host'] = (!$host || $host->display_name == '')?$author->display_name:$host->display_name; 
-		$e['host_id'] = $event->event_host;
-		$e['host_email'] = (!$host || $host->user_email == '')?$author->user_email:$host->user_email;
-		$e['host_gravatar'] = ( !$host || $host->user_email == '' )?$e['gravatar']:get_avatar( $host->user_email );
+		if ( $author ) {
+			$e['author'] = $author->display_name;
+			$e['gravatar'] = get_avatar( $author->user_email );
+			$e['author_email'] = $author->user_email;
+			$e['author_id'] = $event->event_author;			
+		}
+		if ( $host ) {
+			$e['host'] = (!$host || $host->display_name == '')?$author->display_name:$host->display_name; 
+			$e['host_id'] = $event->event_host;
+			$e['host_email'] = (!$host || $host->user_email == '')?$author->user_email:$host->user_email;
+			$e['host_gravatar'] = ( !$host || $host->user_email == '' )?$e['gravatar']:get_avatar( $host->user_email );
+		}
 	} else {
 		$e['author'] = 'Public Submitter';
 		$e['host'] = 'Public Submitter';
@@ -494,7 +508,7 @@ function mc_image_data( $e, $event ) {
 	foreach ( $sizes as $size ) {
 		$e[$size] = get_the_post_thumbnail( $event->event_post, $size, $atts );
 	}
-	if ( is_numeric( $event->event_post ) && isset( $e['medium'] ) ) {
+	if ( is_numeric( $event->event_post ) && ( isset( $e['medium'] ) && $e['medium'] != '' ) ) {
 		$e['image_url'] = strip_tags( $e['medium'] );
 		$e['image'] = $e['medium'];
 	} else {
