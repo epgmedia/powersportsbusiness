@@ -18,28 +18,28 @@ class sno_rightad extends WP_Widget {
 
 	function widget($args, $instance) {
 		extract($args); $customcolors=$instance['custom-colors']; $showtitle=$instance['show-title'];
+		
+		if((!empty($instance['ad_url'])) || (!empty($instance['godengo-adtag']))) { 
 
-		if((!empty($instance['ad_url'])) || (!empty($instance['godengo-adtag']))) {
-
-				$widget = $this->id; $sidebartest = get_option('sidebars_widgets');
-				$columns = get_theme_mod('sno-layout');
+				$widget = $this->id; $sidebartest = get_option('sidebars_widgets'); 
+				$columns = get_theme_mod('sno-layout'); 
 					if (($columns == "Option 3") || ($columns == "Option 6")) { $columnwidth = "even"; } else { $columnwidth = "wide"; }
-
-				foreach ($sidebartest["sidebar-1"] as $key => $value ) {
+					
+				foreach ($sidebartest["sidebar-1"] as $key => $value ) { 
 					if ($widget == $value) {
-						$instance['sidebarname'] = 'Non-Home Sidebar';
+						$instance['sidebarname'] = 'Non-Home Sidebar'; 
 						$instance['photowidth'] = get_option('non_home_right_column');
 						}
 				}
-				foreach ($sidebartest["sidebar-2"] as $key => $value ) {
+				foreach ($sidebartest["sidebar-2"] as $key => $value ) { 
 					if ($widget == $value) {
-						$instance['sidebarname'] = 'Home Main Column';
+						$instance['sidebarname'] = 'Home Main Column'; 
 						$instance['photowidth'] = get_option('home_right_column');
 						}
 				}
-				foreach ($sidebartest["sidebar-3"] as $key => $value ) {
+				foreach ($sidebartest["sidebar-3"] as $key => $value ) { 
 					if (($widget == $value) && ($columnwidth == "even")) {
-						$instance['sidebarname'] = 'Home Bottom Left';
+						$instance['sidebarname'] = 'Home Bottom Left'; 
 						$instance['photowidth'] = get_option('home_left_column');
 						}
 					if (($widget == $value) && ($columnwidth == "wide")) {
@@ -47,9 +47,9 @@ class sno_rightad extends WP_Widget {
 						$instance['photowidth'] = get_option('home_narrow_column');
 						}
 				}
-				foreach ($sidebartest["sidebar-4"] as $key => $value ) {
+				foreach ($sidebartest["sidebar-4"] as $key => $value ) { 
 					if (($widget == $value) && ($columnwidth == "even")) {
-						$instance['sidebarname'] = 'Home Bottom Right';
+						$instance['sidebarname'] = 'Home Bottom Right'; 
 						$instance['photowidth'] = get_option('home_center_column');
 						}
 					if (($widget == $value) && ($columnwidth == "wide")) {
@@ -57,86 +57,54 @@ class sno_rightad extends WP_Widget {
 						$instance['photowidth'] = get_option('home_wide_column');
 						}
 				}
-				foreach ($sidebartest["sidebar-5"] as $key => $value ) {
+				foreach ($sidebartest["sidebar-5"] as $key => $value ) { 
 					if ($widget == $value) {
-						$instance['sidebarname'] = 'Home Sidebar';
+						$instance['sidebarname'] = 'Home Sidebar'; 
 						$instance['photowidth'] = get_option('home_right_column');
 						}
 				}
-				foreach ($sidebartest["sidebar-6"] as $key => $value ) {
+				foreach ($sidebartest["sidebar-6"] as $key => $value ) { 
 					if ($widget == $value) {
 						$instance['sidebarname'] = 'Ads Sidebar';
 						$instance['photowidth'] = get_option('home_narrow_column');
-						}
+						} 
 				}
 
 
 if ($instance['sidebarname']=="Ads Sidebar") {
-
+		
 		echo '<div class="widgetwrap" style="-moz-box-shadow: none !important; -webkit-box-shadow: none !important; box-shadow: none !important;">'; ?>
 	<?php if ($showtitle==on)  { ?>
 	<h4 <?php if ($customcolors==on) { ?>style="
-		background-color:<?php echo $instance['header-color']; ?> !important;
+		background-color:<?php echo $instance['header-color']; ?> !important; 
 		color:<?php echo $instance['header-text']; ?> !important;
 	"<?php } ?> class="widget3">
 		<?php echo $instance['title']; ?>
 	</h4>
 	<?php } ?>
 	<div class="widgetbody3" style="background:none !important;padding:0px !important;">
-	<?
+	<?php
 
 			if ($instance['ad-type'] == "Ad Tag") {
-
-			//SWW Mod to target ads for Top 100 & MDCE sections
-			$openxcode = $instance['godengo-adtag'];
-			$sww_uri = strtolower($_SERVER["REQUEST_URI"]);
-
-
-
-			if (strpos($sww_uri,'/power-50/') !== false) {
-				$searchstr = "div-gpt-ad-1375801013938";
-				$replacestr = "div-gpt-ad-1375817072470";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-				$searchstr = "PSB_ROS";
-				$replacestr = "PSB_P50";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-			}
-
-			if (strpos($sww_uri,'/institute/') !== false) {
-				$searchstr = "div-gpt-ad-1375801013938";
-				$replacestr = "div-gpt-ad-1375816978942";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-				$searchstr = "PSB_ROS";
-				$replacestr = "PSB_AIM";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-			}
-
-			echo $openxcode;
-
-			//SWW Mod - commented original code below
-			//echo $instance['godengo-adtag'];
-
-
-
+			
+			echo $instance['godengo-adtag'];
+			
 			} else if(!empty($instance['link_url'])) { ?>
-
+			
 			<a target="_blank" href="<?php echo $instance['link_url']; ?>"><img src="<?php echo $instance['ad_url']; ?>" style="width:<?php echo $instance['adwidth']; ?>" /></a>
 
 			<?php } else if(!empty($instance['ad_url'])) { ?>
 			<img src="<?php echo $instance['ad_url']; ?>" />
 
 			<?php } ?>
-
+				
 			</div>
 
-	<?php if ($showtitle==on) { ?>
+	<?php if ($showtitle==on) { ?>	
 		<div <?php if ($customcolors==on) { ?>style="background-color:<?php echo $instance['header-color']; ?> !important;"<?php } ?>class="widgetfooter3"></div>
 	<?php } else { ?>
 		<div class="widgetfooter"></div>
-	<?php } ?>
+	<?php } ?>	
 		</div><?php
 
 } else {
@@ -144,62 +112,37 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 		echo '<div class="widgetwrap">'; ?>
 	<?php if ($showtitle==on)  { ?>
 	<h4 <?php if ($customcolors==on) { ?>style="
-		background-color:<?php echo $instance['header-color']; ?> !important;
+		background-color:<?php echo $instance['header-color']; ?> !important; 
 		color:<?php echo $instance['header-text']; ?> !important;
 	"<?php } ?> class="widget3">
 		<?php echo $instance['title']; ?>
 	</h4>
 	<?php } ?>
 	<div class="widgetbody3" <?php if ($customcolors==on) { ?> style="
-		background-color:<?php echo $instance['widget-background']; ?> !important;
-	"<?php } ?>><?
+		background-color:<?php echo $instance['widget-background']; ?> !important; 
+	"<?php } ?>><?php
 
-
+			
 			if ($instance['ad-type'] == "Ad Tag") {
-
-			//SWW Mod to target ads for Top 100 & MDCE sections
-			$openxcode = $instance['godengo-adtag'];
-			$sww_uri = strtolower($_SERVER["REQUEST_URI"]);
-
-
-			if (strpos($sww_uri,'/power-50/') !== false) {
-				$searchstr = "div-gpt-ad-1375801013938";
-				$replacestr = "div-gpt-ad-1375817072470";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-				$searchstr = "PSB_ROS";
-				$replacestr = "PSB_P50";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-			}
-			if (strpos($sww_uri,'/institute/') !== false) {
-				$searchstr = "div-gpt-ad-1375801013938";
-				$replacestr = "div-gpt-ad-1375816978942";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-				$searchstr = "PSB_ROS";
-				$replacestr = "PSB_AIM";
-				$openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-			}
-
-			echo '<div class="adcenter">'.$openxcode.'</div>';
-
+			
+			echo '<div class="adcenter">'.$instance['godengo-adtag'].'</div>';
+			
 			} else if(!empty($instance['link_url'])) { ?>
-
+			
 			<a target="_blank" href="<?php echo $instance['link_url']; ?>"><img src="<?php echo $instance['ad_url']; ?>" style="width:<?php echo $instance['adwidth']; ?>" /></a>
 
 			<?php } else if(!empty($instance['ad_url'])) { ?>
 			<img src="<?php echo $instance['ad_url']; ?>" class="center" />
 
 			<?php } ?>
-
+				
 			</div>
 
-	<?php if ($showtitle==on) { ?>
+	<?php if ($showtitle==on) { ?>	
 		<div <?php if ($customcolors==on) { ?>style="background-color:<?php echo $instance['header-color']; ?> !important;"<?php } ?>class="widgetfooter3"></div>
 	<?php } else { ?>
 		<div class="widgetfooter"></div>
-	<?php } ?>
+	<?php } ?>	
 		</div><?php
 
 
@@ -213,7 +156,7 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 		$instance['title'] = $new_instance['title'];
 		$instance['text'] = $new_instance['text'];
 		$instance['widget-style'] = $new_instance['widget-style'];
- 		$instance['custom-colors'] = ( isset( $new_instance['custom-colors'] ) ? on : "" );
+ 		$instance['custom-colors'] = ( isset( $new_instance['custom-colors'] ) ? on : "" );  
 		$instance['header-color'] = $new_instance['header-color'];
 		$instance['header-text'] = $new_instance['header-text'];
 		$instance['widget-border'] = $new_instance['widget-border'];
@@ -230,10 +173,10 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 		return $instance;
 	}
 
-	function form($instance) {
+	function form($instance) { 
 	$defaults = array( 'header-color' => get_theme_mod('accentcolor-header'), 'header-text' => '#ffffff', 'widget-border' => '#aaaaaa', 'widget-background' => '#eeeeee' );
 	$instance = wp_parse_args( (array) $instance, $defaults );
-	global $registered_sidebar; $sidebarname = $registered_sidebar['name'];
+	global $registered_sidebar; $sidebarname = $registered_sidebar['name']; 
 ?>
 
 
@@ -258,29 +201,29 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 		</p>
 		<p>
 		<input class="upload_image_button_ad<?php echo $number; ?> button-primary" type="button" value="Click to Upload Image"/>
-		<input class="upload_image_ad<?php echo $number; ?>" type="text" id="<?php echo $this->get_field_id('ad_url'); ?>" name="<?php echo $this->get_field_name('ad_url'); ?>" style="width: 95%;" value="<?php echo $instance['ad_url']; ?>" />
+		<input class="upload_image_ad<?php echo $number; ?>" type="text" id="<?php echo $this->get_field_id('ad_url'); ?>" name="<?php echo $this->get_field_name('ad_url'); ?>" style="width: 95%;" value="<?php echo $instance['ad_url']; ?>" /> 
 		</p>
 
 <p>If you want the advertisement to link to another Website, add a link in the box below.</p>
-
+		
 		<p>
 		<label for="<?php echo $this->get_field_id('link_url'); ?>"><?php _e('Advertisement Link'); ?>:</label><br />
 		<input id="<?php echo $this->get_field_id('link_url'); ?>" name="<?php echo $this->get_field_name('link_url'); ?>" style="width: 95%;" value="<?php echo $instance['link_url']; ?>" />
 		</p>
 
-		</div>
+		</div>		
 
 		<div style="float:left;width:230px;margin-right:20px;border-right:1px solid #aaaaaa;padding-right:10px;">
 
 
 		<p style="font-weight:bold;text-decoration:underline">Ad Tag Options</p>
-
+		
 		<p>
 		<label for="<?php echo $this->get_field_id('godengo-adtag'); ?>"><?php _e('Paste Ad Tag Here'); ?>:</label><br />
 		<textarea id="<?php echo $this->get_field_id('godengo-adtag'); ?>" name="<?php echo $this->get_field_name('godengo-adtag'); ?>" style="width: 95%;" rows="9"><?php echo $instance['godengo-adtag']; ?></textarea>
 		</p>
 
-		</div>
+		</div>		
 
 
 		<div style="float:left;width:210px">
@@ -288,12 +231,12 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php if ($instance['show-title'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'show-title' ); ?>" name="<?php echo $this->get_field_name( 'show-title' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-title' ); ?>">Show Title Bar</label>
+			<label for="<?php echo $this->get_field_id( 'show-title' ); ?>">Show Title Bar</label>			
 		</p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php if ($instance['custom-colors'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'custom-colors' ); ?>" name="<?php echo $this->get_field_name( 'custom-colors' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'custom-colors' ); ?>">Turn on Custom Widget Colors</label>
+			<label for="<?php echo $this->get_field_id( 'custom-colors' ); ?>">Turn on Custom Widget Colors</label>			
 		</p>
 		<p>Save this widget to make the color selector active.</p>
 
@@ -313,7 +256,7 @@ if ($instance['sidebarname']=="Ads Sidebar") {
       .each(function () { f.linkTo(this); jQuery(this).css('opacity', 0.75); })
       .focus(function() {
         if (selected) {
-          jQuery(selected).css('opacity', 0.75).removeClass('colorwell-selected');
+          jQuery(selected).css('opacity', 0.75).removeClass('colorwell-selected');          
         }
         f.linkTo(this);
         p.css('opacity', 1);
@@ -322,13 +265,13 @@ if ($instance['sidebarname']=="Ads Sidebar") {
 
   });
 
-
+ 
   jQuery(document).ready(function() {
     jQuery('#snocolorpickerad<?php echo $number; ?>').hide();
     jQuery('#snocolorpickerad<?php echo $number; ?>').farbtastic(".colorwellad<?php echo $number; ?>");
     jQuery(".colorwellad<?php echo $number; ?>").click(function(){jQuery('#snocolorpickerad<?php echo $number; ?>').slideDown()});
   });
-
+  
 jQuery(document).ready(function() {
 	jQuery('.upload_image_button_ad<?php echo $number; ?>').click(function() {
 	formfield = jQuery(this).prev('.upload_image_ad<?php echo $number; ?>');
@@ -345,8 +288,8 @@ jQuery(document).ready(function() {
 return false;
 });
 });
-
-
+  
+  
 </script>
 		<div id="snocolorpickerad<?php echo $number; ?>"></div>
 
@@ -357,8 +300,8 @@ return false;
 
 		</div><div style="clear:both"></div>
 
-
-	<?php
+		
+	<?php 
 	}
 }
 ?>

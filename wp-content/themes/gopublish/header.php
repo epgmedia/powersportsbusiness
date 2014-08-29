@@ -189,6 +189,7 @@ if (strpos($sww_uri,'/institute/') !== false) {
 ?>
 <script type='text/javascript'>
     <?php echo $openxcode ?>
+
 </script>
 
 <?php wp_head(); ?>

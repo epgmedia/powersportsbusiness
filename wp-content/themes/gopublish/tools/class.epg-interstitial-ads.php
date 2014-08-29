@@ -31,34 +31,36 @@ class epg_interstitial_ads {
     /** Variables */
 
     /** @var string source */
-    private $referringURL;
-    /** @var string Cookie seenAdPsb */
-    private $visitCookie;
+	private $referringURL = '';
+
+	/** @var string Cookie seenAdPsb */
+	private $visitCookie = '';
 
     /**
      * Constructor
      */
     public function __construct() {
+
+		/** HTTP Referer */
         if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
             $this->referringURL = $_SERVER['HTTP_REFERER'];
         }
+
+		/** Cookie */
         if ( isset( $_COOKIE['interstitial_ad_psb'] ) ) {
             $this->visitCookie = $_COOKIE['interstitial_ad_psb'];
         }
 
 		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
 
-		if ( TRUE === $this->referral_check() ) {
-			add_action('init', array($this, 'enqueueAdPosition'));
-		}
+		add_action('get_header', array($this, 'enqueueAdPosition'));
+
     }
     /**
      * Enqueues items in HEAD
      */
 	public function enqueueAdPosition() {
-		add_action( 'wp_head', array($this, 'headerScript'), 10, '');
-		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
-		$this->set_cookie();
+		$this->referral_check();
     }
     /**
      * Checks to see if they're coming from Informz or outside URL
@@ -82,11 +84,10 @@ class epg_interstitial_ads {
 			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL ) &&
 			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )
 		) {
-
-			return TRUE;
+			add_action( 'wp_head', array($this, 'headerScript'), 10, '');
+			add_action( 'after_header', array($this, 'adPosition'), 100, '' );
+			$this->set_cookie();
         }
-
-		return FALSE;
     }
 
 	protected function set_cookie() {
@@ -124,30 +125,41 @@ class epg_interstitial_ads {
             <script type='text/javascript'>
 
                 googletag.cmd.push(function() {
-                    googletag.defineSlot('/35190362/PSB_ROS_Roadblock', [1, 1], 'div-gpt-ad-1398116137114-0').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/35190362/PSB_ROS_Roadblock', 'div-gpt-ad-1398116137114-0-oop').addService(googletag.pubads());
-                    googletag.pubads().enableSingleRequest();
+
+                	var slot = '/35190362/PSB_ROS_Roadblock';
+                    googletag.defineSlot( slot, [1, 1], 'div-gpt-ad-1398116137114-0' ).addService( googletag.pubads() );
+                    googletag.defineOutOfPageSlot( slot, 'div-gpt-ad-1398116137114-0-oop' ).addService( googletag.pubads() );
+					googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+						var f_slot = event.slot.k;
+						if ( ( f_slot === slot) && !event.isEmpty ) {
+							console.log( f_slot + ' slot was rendered' );
+							jQuery('.interstitialAd').show();
+						}
+						console.log( f_slot + ' Complete' );
+						console.log( event );
+
+					});
                     googletag.enableServices();
                 });
 
-                jQuery('.interstitialAd').ready(function($) {
+                jQuery( '.interstitialAd' ).ready( function( $ ) {
                 	var ad = '.interstitialAd';
-                    $('#closeInterstitial').click(function() {
+                    $( '#closeInterstitial' ).click( function() {
                         $(ad).hide();
-                    });
-                    var e = $('#countdownRedirect').html();
+                    } );
+                    var e = $( '#countdownRedirect' ).html();
                     if( ! e ) {
-                        throw new Error('COUNTDOWN_REDIRECT element id not found');
+                        throw new Error( 'COUNTDOWN_REDIRECT element id not found' );
                     }
                     var cTicks = e;
-                    setInterval(function() {
+                    setInterval( function() {
                         if( cTicks ) {
-                            $('#countdownRedirect').html(--cTicks);
+                            $( '#countdownRedirect' ).html( --cTicks );
                         } else {
-                            clearInterval(e);
-                            $(ad).hide();
+                            clearInterval( e );
+                            $( ad ).hide();
                         }
-                    }, 1000);
+                    }, 1000 );
                 });
 
 
@@ -183,5 +195,3 @@ class epg_interstitial_ads {
         return;
     }
 }
-
-new epg_interstitial_ads();
