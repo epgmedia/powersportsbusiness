@@ -75,63 +75,29 @@ class epg_interstitial_ads {
 
 		wp_enqueue_script( 'epg_interstitial_ad' );
 
-		//add_action('get_header', array($this, 'enqueueAdPosition'));
+		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
 
     }
-    /**
-     * Enqueues items in HEAD
-     */
-	public function enqueueAdPosition() {
-		$this->referral_check();
+
+	public function adPosition() {
+        ?>
+		<div class='interstitialAd'>
+			<div class="close-interstitial">X</div>
+			<!-- PSB_ROS_Roadblock -->
+			<div id='div-gpt-ad-1398116137114-0' style='width:1px; height:1px;'>
+				<script type='text/javascript'>
+					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0'); });
+				</script>
+			</div>
+			<!-- PSB_ROS_Roadblock out-of-page -->
+			<div id='div-gpt-ad-1398116137114-0-oop'>
+				<script type='text/javascript'>
+					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0-oop'); });
+				</script>
+			</div>
+		</div>
+		<?php
     }
-    /**
-     * Checks to see if they're coming from Informz or outside URL
-     * and whether they got cookies
-     */
-    protected function referral_check() {
-		/**
-		 * If:
-		 *   Cookie or
-		 *   Not on the site already or
-		 *   Coming from Transition Page or
-		 *   Coming from Informz
-		 * then
-		 *   TRUE
-		 * Else
-		 *   FALSE
-		 */
-		if (
-			time() >= $this->visitCookie &&
-			! preg_match( "/powersportsbusiness\.com/", $this->referringURL ) &&
-			! preg_match( "/epgmedia\.s3\.amazonaws\.com/", $this->referringURL ) &&
-			! preg_match( "/epgmediallc\.informz\.net/", $this->referringURL )
-		) {
-			add_action( 'wp_head', array($this, 'headerScript'), 10, '');
-			add_action( 'after_header', array($this, 'adPosition'), 100, '' );
-			$this->set_cookie();
-        }
-    }
-
-	protected function set_cookie() {
-		// Time cookie was set
-		$set_time = time()+(60*60*6);
-
-		// Ad cookie
-		setcookie(
-			'interstitial_ad_psb',
-			$set_time,
-			$set_time,
-			COOKIEPATH,
-			COOKIE_DOMAIN,
-			FALSE
-		);
-
-		// Remove "SeenAd" cookie
-		if ($_GET['unsetCookie'] && is_admin()) {
-			setcookie( "interstitial_ad_psb", TRUE, time()-(60*60), COOKIEPATH, COOKIE_DOMAIN, false );
-		}
-
-	}
 
 	public function print_to_foot() {
 
@@ -141,36 +107,4 @@ class epg_interstitial_ads {
 		echo "<!-- " . $this->visitCookie . " --!>";
 
 	}
-
-	public function headerScript() {
-		?>
-		<script type='text/javascript'>
-		</script>
-		<?php
-	}
-
-	public function adPosition() {
-        ?>
-		<div class='interstitialAd'>
-			<div class="close-interstitial">X</div>
-			<div id="test-roadblock-ad">
-				<a href="http://www.chriswgerber.com/"><img src="<?php echo $this->dir_uri; ?>/lambda.png" /></a>
-			</div>
-			<!-- PSB_ROS_Roadblock
-			<div id='div-gpt-ad-1398116137114-0' style='width:1px; height:1px;'>
-				<script type='text/javascript'>
-					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0'); });
-				</script>
-			</div>
-			-->
-			<!-- PSB_ROS_Roadblock out-of-page
-			<div id='div-gpt-ad-1398116137114-0-oop'>
-				<script type='text/javascript'>
-					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0-oop'); });
-				</script>
-			</div>
-			-->
-		</div>
-		<?php
-    }
 }

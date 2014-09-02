@@ -6,7 +6,7 @@
 
 console.log(ad_data);
 
-googletag.cmd.push(function() {
+googletag.cmd.push( function() {
 	googletag.defineSlot( ad_data.ad_position, [1, 1], 'div-gpt-ad-1398116137114-0' ).addService( googletag.pubads() );
 	googletag.defineOutOfPageSlot( ad_data.ad_position, 'div-gpt-ad-1398116137114-0-oop' ).addService( googletag.pubads() );
 	googletag.pubads().addEventListener('slotRenderEnded', function(event) {
@@ -28,9 +28,8 @@ jQuery(document).ready( function( $ ) {
 	$close_button = $('.close-interstitial');
 
 	var close_overlay = function() {
-		console.log(this);
 		$(this).hide();
-	}
+	};
 
 	$ad_postition.on("click", close_overlay);
 	$close_button.on("click", close_overlay);
