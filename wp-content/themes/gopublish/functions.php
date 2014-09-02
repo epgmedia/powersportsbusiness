@@ -23,7 +23,7 @@ function gopublish_theme_setup() {
 	include( TEMPLATEPATH . "/tools/pagewidget.php" );
 
 	/** Interstitial Ads */
-	include( TEMPLATEPATH . '/tools/class.epg-interstitial-ads.php' );
+	include( TEMPLATEPATH . '/tools/interstitial-ad/class.epg-interstitial-ads.php' );
 
 	/** Wallpaper Ads */
 	include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
