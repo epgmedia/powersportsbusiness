@@ -28,6 +28,8 @@ class epg_interstitial_ads {
      *     Close
      */
 
+	public $dir_uri;
+
     /** Variables */
 	public $data = array();
 
@@ -41,6 +43,8 @@ class epg_interstitial_ads {
      * Constructor
      */
     public function __construct() {
+
+		$this->dir_uri = get_template_directory_uri() . '/tools/interstitial-ad';
 
 		/** HTTP Referer */
         if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
@@ -57,10 +61,11 @@ class epg_interstitial_ads {
 		$this->data['ad_position'] = '/35190362/PSB_ROS_Roadblock';
 
 		add_action( 'wp_footer', array($this, 'print_to_foot'), 10, '');
+		add_action( 'after_header', array($this, 'adPosition'), 100, '' );
 
 		wp_register_script(
 			'epg_interstitial_ad',
-			get_template_directory_uri() . '/tools/interstitial-ad/interstitial_ad.js',
+			$this->dir_uri . '/interstitial_ad.js',
 			array( 'jquery' ),
 			false,
 			false
@@ -147,26 +152,24 @@ class epg_interstitial_ads {
 	public function adPosition() {
         ?>
 		<div class='interstitialAd'>
-			<div class='head'>
-				<div>
-					<img src='http://epgmedia.s3.amazonaws.com/email/powersportsbusiness/enewsletter/2013/images/PSBRedirectheader.jpeg' width='400' alt='PowersportsBusiness.com' />
-				</div>
-				<div>
-					<span>You will automatically be redirected in <span class='counter' id='countdownRedirect'>10</span> seconds. <a id='closeInterstitial'>Click here to proceed</a>.</span>
-				</div>
+			<div class="close-interstitial">X</div>
+			<div id="test-roadblock-ad">
+				<a href="http://www.chriswgerber.com/"><img src="<?php echo $this->dir_uri; ?>/lambda.png" /></a>
 			</div>
-			<!-- PSB_ROS_Roadblock -->
+			<!-- PSB_ROS_Roadblock
 			<div id='div-gpt-ad-1398116137114-0' style='width:1px; height:1px;'>
 				<script type='text/javascript'>
 					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0'); });
 				</script>
 			</div>
-			<!-- PSB_ROS_Roadblock out-of-page -->
+			-->
+			<!-- PSB_ROS_Roadblock out-of-page
 			<div id='div-gpt-ad-1398116137114-0-oop'>
 				<script type='text/javascript'>
 					googletag.cmd.push(function() { googletag.display('div-gpt-ad-1398116137114-0-oop'); });
 				</script>
 			</div>
+			-->
 		</div>
 		<?php
     }

@@ -22,22 +22,17 @@ googletag.cmd.push(function() {
 	googletag.enableServices();
 });
 
-jQuery( '.interstitialAd' ).ready( function( $ ) {
-	var ad = '.interstitialAd';
-	$( '#closeInterstitial' ).click( function() {
-		$(ad).hide();
-	} );
-	var e = $( '#countdownRedirect' ).html();
-	if( ! e ) {
-		throw new Error( 'COUNTDOWN_REDIRECT element id not found' );
+jQuery(document).ready( function( $ ) {
+
+	$ad_postition = $('.interstitialAd');
+	$close_button = $('.close-interstitial');
+
+	var close_overlay = function() {
+		console.log(this);
+		$(this).hide();
 	}
-	var cTicks = e;
-	setInterval( function() {
-		if( cTicks ) {
-			$( '#countdownRedirect' ).html( --cTicks );
-		} else {
-			clearInterval( e );
-			$( ad ).hide();
-		}
-	}, 1000 );
+
+	$ad_postition.on("click", close_overlay);
+	$close_button.on("click", close_overlay);
+
 });
