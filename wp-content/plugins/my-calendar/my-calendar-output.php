@@ -149,44 +149,46 @@ function my_calendar_draw_event( $event, $type="calendar", $process_date, $time,
 	global $wpdb;
 	$url = plugin_dir_url( __FILE__ );
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	if ( $event->category_private == 1 && !is_user_logged_in() ) { return; }
 	// assign empty values to template sections
 	$header  = $address = $more = $author = $list_title = $title = $output = $container = $short = $description = $link = $vcal = $gcal = '';
 	$date_format = ( get_option('mc_date_format') != '' ) ? get_option('mc_date_format') : get_option('date_format');
 	$data = mc_create_tags($event);	
-	$details = apply_filters( 'mc_custom_template', false, $data, $event, $type, $process_date, $time, $template );
-	$templates = get_option('mc_templates');	
-	if ( $details === false ) {
-		if ( $template != '' && mc_file_exists( sanitize_file_name( $template ) ) ) {
-			$template = @file_get_contents( mc_get_file( sanitize_file_name( $template ) ) );
-			$details = jd_draw_template( $data, $template );
-		} else {
-			switch ($type) {
-				case 'mini':
-					$template = $templates['mini'];
-					if ( get_option( 'mc_use_mini_template' ) == 1 ) {
-						$details = jd_draw_template( $data, $template );
-					}
-				break;
-				case 'list':
-					$template = $templates['list'];
-					if ( get_option( 'mc_use_list_template' ) == 1 ) {
-						$details = jd_draw_template( $data, $template );
-					}
-				break;
-				case 'single':
-					$template = $templates['details'];
-					if ( get_option( 'mc_use_details_template' ) == 1 ) {
-						$details = jd_draw_template( $data, $template );
-					}
-				break;
-				case 'calendar':
-				default:
-					$template = $templates['grid'];
-					if ( get_option( 'mc_use_grid_template' ) == 1 ) {
-						$details = jd_draw_template( $data, $template );
-					}
+	$templates = get_option('mc_templates');		
+	if ( mc_show_details( $time, $type ) ) {
+		$details = apply_filters( 'mc_custom_template', false, $data, $event, $type, $process_date, $time, $template );
+		if ( $details === false ) {
+			if ( $template != '' && mc_file_exists( sanitize_file_name( $template ) ) ) {
+				$template = @file_get_contents( mc_get_file( sanitize_file_name( $template ) ) );
+				$details = jd_draw_template( $data, $template );
+			} else {
+				switch ($type) {
+					case 'mini':
+						$template = $templates['mini'];
+						if ( get_option( 'mc_use_mini_template' ) == 1 ) {
+							$details = jd_draw_template( $data, $template );
+						}
+					break;
+					case 'list':
+						$template = $templates['list'];
+						if ( get_option( 'mc_use_list_template' ) == 1 ) {
+							$details = jd_draw_template( $data, $template );
+						}
+					break;
+					case 'single':
+						$template = $templates['details'];
+						if ( get_option( 'mc_use_details_template' ) == 1 ) {
+							$details = jd_draw_template( $data, $template );
+						}
+					break;
+					case 'calendar':
+					default:
+						$template = $templates['grid'];
+						if ( get_option( 'mc_use_grid_template' ) == 1 ) {
+							$details = jd_draw_template( $data, $template );
+						}
+				}
 			}
 		}
 	}
@@ -221,143 +223,154 @@ function my_calendar_draw_event( $event, $type="calendar", $process_date, $time,
 	$current_date = date_i18n( apply_filters( 'mc_date_format', $date_format, 'details' ), strtotime( $process_date ) );
 	$group_class = ( $event->event_span == 1 ) ? ' multidate group'.$event->event_group_id : '' ;
 	$heading_level = apply_filters( 'mc_heading_level_table','h3',$type,$time,$template );
-	$header .= ( $type != 'single' && $type != 'list' ) ? "<$heading_level class='event-title summary$group_class'>$wrap$image$event_title$balance</$heading_level>\n" : '';
+	$header .= ( $type != 'single' && $type != 'list' ) ? "<$heading_level class='event-title summary$group_class' id='$uid-$day_id-$type-title'>$wrap$image$event_title$balance</$heading_level>\n" : '';
 	$event_title = ( $type == 'single' ) ? apply_filters( 'mc_single_event_title', $event_title, $event ) : $event_title ;
 	$title = ( $type == 'single' && !is_singular( 'mc-events' ) )?"<h2 class='event-title summary'>$image $event_title</h2>\n":'';
 	$title = apply_filters( 'mc_event_title', $title, $event, $event_title, $image );
 	$header .= $title;
-	if ( $details === false ) {
-		$custom = false;
-		// put together address information as vcard
-		if ( ( $display_address == 'true' || $display_map == 'true' ) ) {
-			$address = mc_hcard( $event, $display_address, $display_map );
-		}
-		// end vcard
-		$close = ( $type == 'calendar' || $type == 'mini' ) ? "<a href=\"#$uid-$day_id-$type\" class='mc-toggle mc-close close'><img src=\"".plugin_dir_url(__FILE__)."images/event-close.png\" alt='".__('Close','my-calendar')."' /></a>" : '' ;
-		$time = mc_time_html( $event, $type, $current_date );
-		if ($type == "list") {
-			$heading_level = apply_filters('mc_heading_level_list','h3',$type,$time,$template );	
-			$list_title = "<$heading_level class='event-title summary'>$image".$event_title."</$heading_level>\n";
-		}
-		if ( $mc_display_author == 'true' ) {
-			if ( $event->event_author != 0 ) {
-				$e = get_userdata( $event->event_author );
-				$author = '<p class="event-author">'.__('Posted by', 'my-calendar').' <span class="author-name">'.$e->display_name."</span></p>\n";
+	
+	if ( mc_show_details( $time, $type ) ) {
+
+		if ( $details === false ) {
+			$custom = false;
+			// put together address information as vcard
+			if ( ( $display_address == 'true' || $display_map == 'true' ) ) {
+				$address = mc_hcard( $event, $display_address, $display_map );
 			}
-		}
-		if ( $display_details == 'true' && !isset( $_GET['mc_id'] ) ) {
-			$details_label = mc_get_details_label( $event, $data );
-			$details_link = mc_get_details_link( $event );
-			$more = ( get_option( 'mc_uri' ) != '' )?"<p class='mc_details'><a href='$details_link'>$details_label</a></p>\n":'';
-		}
-		// handle link expiration
-		$event_link = mc_event_link( $event );
-
-		if ( function_exists('mc_google_cal') && get_option('mc_show_gcal') == 'true' ) {
-			$gcal_link =  "<p class='gcal'>".jd_draw_template( $data, '{gcal_link}' )."</p>";
-			$gcal = $gcal_link;
-		}
-
-		if ( function_exists('my_calendar_generate_vcal') && get_option('mc_show_event_vcal') == 'true' ) {
-			$nonce = wp_create_nonce('my-calendar-nonce');
-			$vcal_link = "<p class='ical'><a rel='nofollow' href='".home_url()."?vcal=$uid"."'>".__('iCal','my-calendar')."</a></p>\n";
-			$vcal = $vcal_link;
-		}
-		$default_size = apply_filters( 'mc_default_image_size', 'medium' );
-		if ( is_numeric( $event->event_post ) && $event->event_post != 0 && ( isset( $data[$default_size] ) && $data[$default_size] != '' )) {
-			$atts = apply_filters( 'mc_post_thumbnail_atts',  array( 'class'=>'mc-image' ) ); 
-			$image = get_the_post_thumbnail( $event->event_post, $default_size, $atts );
-		} else {
-			$image = ( $event->event_image != '' )?"<img src='$event->event_image' alt='' class='mc-image' />":'';
-		}
-		if ( get_option('mc_desc') == 'true' || $type == 'single' ) {
-			$description = ( get_option('mc_process_shortcodes') == 'true' )?apply_filters('the_content',stripcslashes($event->event_desc)):wpautop(stripcslashes($event->event_desc),1);
-			$description = "<div class='longdesc'>$description</div>";
-		}
-		if ( get_option('mc_short') == 'true' && $type != 'single' ) {
-			$short = ( get_option('mc_process_shortcodes') == 'true' )?apply_filters('the_content',stripcslashes($event->event_short)):wpautop(stripcslashes($event->event_short),1);
-			$short = "<div class='shortdesc'>$short</div>";	
-		}
-
-		if ( get_option('mc_event_registration') == 'true' ) {
-			switch ($event->event_open) {
-				case '0':$status = get_option('mc_event_closed');break;
-				case '1':$status = get_option('mc_event_open');break;
-				case '2':$status = '';break;
-				default:$status = '';
+			// end vcard
+			$close = ( $type == 'calendar' || $type == 'mini' ) ? "<a href=\"#$uid-$day_id-$type\" class='mc-toggle mc-close close'><img src=\"".plugin_dir_url(__FILE__)."images/event-close.png\" alt='".__('Close','my-calendar')."' /></a>" : '' ;
+			$time = mc_time_html( $event, $type, $current_date );
+			if ($type == "list") {
+				$heading_level = apply_filters('mc_heading_level_list','h3',$type,$time,$template );	
+				$list_title = "<$heading_level class='event-title summary' id='$uid-$day_id-$type-title'>$image".$event_title."</$heading_level>\n";
 			}
-		} else {
-			$status = '';
-		}
-		
-		// JCD TODO - this is really wonky. What was I thinking?
-		// if the event is a member of a group of events, but not the first, note that.
-		if ( $event->event_group == 1 ) {
-			$info = array();
-			$info[] = $event->event_id;
-			update_option( 'mc_event_groups' , $info );
-		}
-		
-		if ( is_array( get_option( 'mc_event_groups' ) ) ) {
-			if ( in_array ( $event->event_id , get_option( 'mc_event_groups') ) ) {
-				if ( $process_date != $event->event_begin ) {
-					$status = __( "This event is in a series. Register for the first event in this series to attend.",'my-calendar' );
+			if ( $mc_display_author == 'true' ) {
+				if ( $event->event_author != 0 ) {
+					$e = get_userdata( $event->event_author );
+					$author = '<p class="event-author">'.__('Posted by', 'my-calendar').' <span class="author-name">'.$e->display_name."</span></p>\n";
 				}
 			}
-		}
+			if ( $display_details == 'true' && !isset( $_GET['mc_id'] ) ) {
+				$details_label = mc_get_details_label( $event, $data );
+				$details_link = mc_get_details_link( $event );
+				$more = ( get_option( 'mc_uri' ) != '' )?"<p class='mc_details'><a href='$details_link'>$details_label</a></p>\n":'';
+			}
+			// handle link expiration
+			$event_link = mc_event_link( $event );
 
-		$status = ($status != '')?"<p>$status</p>":'';
-		$status = apply_filters( 'mc_registration_state', $status, $event );
-		$return = ($type == 'single')?"<p><a href='".get_option('mc_uri')."'>".__('View full calendar','my-calendar')."</a></p>":'';
+			if ( function_exists('mc_google_cal') && get_option('mc_show_gcal') == 'true' ) {
+				$gcal_link =  "<p class='gcal'>".jd_draw_template( $data, '{gcal_link}' )."</p>";
+				$gcal = $gcal_link;
+			}
 
-		if ( $type == 'calendar' && get_option('mc_open_uri') == 'true' && $time != 'day' ) $description = $short = $status = '';
+			if ( function_exists('my_calendar_generate_vcal') && get_option('mc_show_event_vcal') == 'true' ) {
+				$nonce = wp_create_nonce('my-calendar-nonce');
+				$vcal_link = "<p class='ical'><a rel='nofollow' href='".home_url()."?vcal=$uid"."'>".__('iCal','my-calendar')."</a></p>\n";
+				$vcal = $vcal_link;
+			}
+			$default_size = apply_filters( 'mc_default_image_size', 'medium' );
+			if ( is_numeric( $event->event_post ) && $event->event_post != 0 && ( isset( $data[$default_size] ) && $data[$default_size] != '' )) {
+				$atts = apply_filters( 'mc_post_thumbnail_atts',  array( 'class'=>'mc-image' ) ); 
+				$image = get_the_post_thumbnail( $event->event_post, $default_size, $atts );
+			} else {
+				$image = ( $event->event_image != '' )?"<img src='$event->event_image' alt='' class='mc-image' />":'';
+			}
+			if ( get_option('mc_desc') == 'true' || $type == 'single' ) {
+				$description = ( get_option('mc_process_shortcodes') == 'true' )?apply_filters('the_content',stripcslashes($event->event_desc)):wpautop(stripcslashes($event->event_desc),1);
+				$description = "<div class='longdesc'>$description</div>";
+			}
+			if ( get_option('mc_short') == 'true' && $type != 'single' ) {
+				$short = ( get_option('mc_process_shortcodes') == 'true' )?apply_filters('the_content',stripcslashes($event->event_short)):wpautop(stripcslashes($event->event_short),1);
+				$short = "<div class='shortdesc'>$short</div>";	
+			}
 
-		if ( get_option( 'mc_gmap' ) == 'true' ) {
-			$map = ( is_singular( 'mc-event' ) || $type == 'single' ) ? mc_generate_map( $event ) : '' ;
+			if ( get_option('mc_event_registration') == 'true' ) {
+				switch ($event->event_open) {
+					case '0':$status = get_option('mc_event_closed');break;
+					case '1':$status = get_option('mc_event_open');break;
+					case '2':$status = '';break;
+					default:$status = '';
+				}
+			} else {
+				$status = '';
+			}
+			
+			// JCD TODO - this is really wonky. What was I thinking?
+			// if the event is a member of a group of events, but not the first, note that.
+			if ( $event->event_group == 1 ) {
+				$info = array();
+				$info[] = $event->event_id;
+				update_option( 'mc_event_groups' , $info );
+			}
+			
+			if ( is_array( get_option( 'mc_event_groups' ) ) ) {
+				if ( in_array ( $event->event_id , get_option( 'mc_event_groups') ) ) {
+					if ( $process_date != $event->event_begin ) {
+						$status = __( "This event is in a series. Register for the first event in this series to attend.",'my-calendar' );
+					}
+				}
+			}
+
+			$status = ($status != '')?"<p>$status</p>":'';
+			$status = apply_filters( 'mc_registration_state', $status, $event );
+			$return = ($type == 'single')?"<p><a href='".get_option('mc_uri')."'>".__('View full calendar','my-calendar')."</a></p>":'';
+
+			if ( !mc_show_details( $time, $type ) ) $description = $short = $status = '';
+
+			if ( get_option( 'mc_gmap' ) == 'true' ) {
+				$map = ( is_singular( 'mc-event' ) || $type == 'single' ) ? mc_generate_map( $event ) : '' ;
+			} else {
+				$map = '';
+			}
+			
+			if ( $event_link != '' && get_option( 'mc_event_link' ) != 'false' ) {
+				$is_external = mc_external_link( $event_link );	
+				$external_class = ( $is_external ) ? "class='$type-link external'" : "class='$type-link'";
+				$link_template = ( isset($templates['link']))?$templates['link']:'{title}';
+				$link_text = jd_draw_template($data,$link_template);
+				$link = "<p><a href='$event_link' $external_class>".$link_text."</a></p>";
+			}
+			$details = "\n"
+				. $close
+				. $time
+				. $list_title
+				. $image
+				."<div class='location'>"
+				. $map
+				. $address
+				. "</div>"			
+				. $description 
+				. $short 
+				. $link 
+				. $status
+				. $author
+				. "<div class='sharing'>"
+				. $vcal
+				. $gcal
+				. $more
+				. "</div>"
+				. $return;
 		} else {
-			$map = '';
+			$custom = true; 
+			// if a custom template is in use
+			$toggle = ( $type == 'calendar' || $type == 'mini' ) ? "<a href=\"#$uid-$day_id-$type\" class='mc-toggle mc-close close'><img src=\"".plugin_dir_url(__FILE__)."images/event-close.png\" alt='".__('Close','my-calendar')."' /></a>" : '';	
+			$details = $toggle.$details."\n";
 		}
-		
-		if ( $event_link != '' && get_option( 'mc_event_link' ) != 'false' ) {
-			$is_external = mc_external_link( $event_link );	
-			$external_class = ( $is_external ) ? "class='$type-link external'" : "class='$type-link'";
-			$link_template = ( isset($templates['link']))?$templates['link']:'{title}';
-			$link_text = jd_draw_template($data,$link_template);
-			$link = "<p><a href='$event_link' $is_external>".$link_text."</a></p>";
-		}
-		$details = "\n"
-			. $close
-			. $time
-			. $list_title
-			. $image
-			."<div class='location'>"
-			. $map
-			. $address
-			. "</div>"			
-			. $description 
-			. $short 
-			. $link 
-			. $status
-			. $author
-			. "<div class='sharing'>"
-			. $vcal
-			. $gcal
-			. $more
-			. "</div>"
-			. $return;
+		$container = "<div id='$uid-$day_id-$type-details' class='details' role='dialog' aria-labelledby='$uid-$day_id-$type-title'>\n"; 
+			$container = apply_filters( 'mc_before_event', $container, $event, $type, $time );
+			$details = $header . $container . $details;
+			$details .= apply_filters( 'mc_after_event', '', $event, $type, $time );
+			$details .= $close; // second close button
+		$details .= "</div><!--ends .details--></div>";
+		$details = apply_filters( 'mc_event_content', $details, $event, $type, $time );
 	} else {
-		$custom = true; 
-		// if a custom template is in use
-		$toggle = ( $type == 'calendar' || $type == 'mini' ) ? "<a href=\"#$uid-$day_id-$type\" class='mc-toggle mc-close close'><img src=\"".plugin_dir_url(__FILE__)."images/event-close.png\" alt='".__('Close','my-calendar')."' /></a>" : '';	
-		$details = $toggle.$details."\n";
+		$details = $header . "</div>";
 	}
-	$container = "<div id='$uid-$day_id-$type-details' class='details'>\n"; 
-	$container = apply_filters( 'mc_before_event', $container, $event, $type, $time );
-	$details = $header . $container . $details;
-	$details .= apply_filters( 'mc_after_event', '', $event, $type, $time );
-	$details .= "</div><!--ends .details--></div>";
-	$details = apply_filters( 'mc_event_content', $details, $event, $type, $time );
 	return $details;
+}
+
+function mc_show_details( $time, $type ) {
+	return ( $type == 'calendar' && get_option('mc_open_uri') == 'true' && $time != 'day' ) ? false : true;
 }
 
 add_filter( 'mc_after_event', 'mc_edit_panel', 10, 4 );
@@ -379,14 +392,14 @@ function mc_edit_panel( $html, $event, $type, $time ) {
 		}
 		$edit .= "</p></div>";
 	}
-	if ( $type == 'calendar' && get_option('mc_open_uri') == 'true' && $time != 'day' ) { $edit = ''; }
+	if ( mc_show_details( $time, $type ) ) { $edit = ''; }
 	return $html . $edit;
 }
 
 function mc_build_date_switcher( $type='calendar', $cid='all' ) {
 global $wpdb;
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	$current_url = mc_get_current_url();
 	$date_switcher = "";
 	$date_switcher .= '<div class="my-calendar-date-switcher">
@@ -434,11 +447,11 @@ global $wpdb;
 		    $fut = $fut + 1;
 		} 
 	$date_switcher .= $p;
-	$date_switcher .= '<option value="'.date("Y",time()+($offset)).'"'.mc_year_comparison(date("Y",time()+($offset))).'>'.date("Y",time()+($offset))."</option>\n";
+	$date_switcher .= '<option value="'.date( "Y",time()+( $offset ) ).'"'.mc_year_comparison( date( "Y",time()+( $offset ) ) ).'>'.date( "Y",time()+( $offset ) )."</option>\n";
 	$date_switcher .= $f;
-    $date_switcher .= '</select> <input type="submit" class="button" value="'.__('Go','my-calendar').'" /></div>
+    $date_switcher .= '</select> <input type="submit" class="button" value="'.__( 'Go','my-calendar' ).'" /></div>
 	</form></div>';
-	$date_switcher = apply_filters('mc_jumpbox',$date_switcher);
+	$date_switcher = apply_filters( 'mc_jumpbox', $date_switcher );
 	return $date_switcher;
 }
 
@@ -448,16 +461,16 @@ $time = ( isset( $_GET['time'] ) ) ?  $_GET['time'] : 'month';
 $category = ( isset($_GET['mcat'] ) ) ? $_GET['mcat'] : ''; // these are sanitized elsewhere
 $ltype = ( isset( $_GET['ltype'] ) ) ? $_GET['ltype'] : '';
 $lvalue = ( isset( $_GET['lvalue'] ) ) ? $_GET['lvalue'] : '';
-header('Content-Type: '.get_bloginfo('html_type').'; charset='.get_bloginfo('charset'));
+header( 'Content-Type: '.get_bloginfo('html_type').'; charset='.get_bloginfo( 'charset' ) );
 echo '<!DOCTYPE html>
 <!--[if IE 7]>
-<html id="ie7" dir="'.get_bloginfo('text_direction').'" lang="'.get_bloginfo('language').'">
+<html id="ie7" dir="'.get_bloginfo( 'text_direction' ).'" lang="'.get_bloginfo( 'language' ).'">
 <![endif]-->
 <!--[if IE 8]>
-<html id="ie8" dir="'.get_bloginfo('text_direction').'" lang="'.get_bloginfo('language').'">
+<html id="ie8" dir="'.get_bloginfo( 'text_direction' ).'" lang="'.get_bloginfo('language').'">
 <![endif]-->
 <!--[if !(IE 6) | !(IE 7) | !(IE 8) ]><!-->
-<html dir="'.get_bloginfo('text_direction').'" lang="'.get_bloginfo('language').'">
+<html dir="'.get_bloginfo( 'text_direction' ).'" lang="'.get_bloginfo( 'language' ).'">
 <!--<![endif]-->
 <head>
 <meta charset="'.get_bloginfo('charset').'" />
@@ -617,7 +630,7 @@ function mc_search_results( $query ) {
 	}
 	global $wpdb;
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	
 	$date = date('Y', current_time('timestamp')).'-'.date('m', current_time('timestamp')).'-'.date('d', current_time('timestamp'));
 	// if a value is non-zero, I'll grab a handful of extra events so I can throw out holidays and others like that.
@@ -744,7 +757,7 @@ function my_calendar( $name, $format, $category, $time='month', $ltype='', $lval
 	$mcdb = $wpdb;
 	$offset = (60*60*get_option('gmt_offset'));
 
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	$my_calendar_body = '';
 	/* filter */
 	if ( $time == 'day' ) { $format = 'list'; }
@@ -915,8 +928,8 @@ function my_calendar( $name, $format, $category, $time='month', $ltype='', $lval
 			$nLink = my_calendar_next_link($c_year,$c_month,$c_day,$format,$time);	
 			$prevLink = mc_build_url( array( 'yr'=>$pLink['yr'],'month'=>$pLink['month'],'dy'=>$pLink['day'],'cid'=>$main_class ),array() );
 			$nextLink = mc_build_url( array( 'yr'=>$nLink['yr'],'month'=>$nLink['month'],'dy'=>$nLink['day'],'cid'=>$main_class ),array() );
-			$previous_link = apply_filters( 'mc_previous_link','		<li class="my-calendar-prev"><a href="' . $prevLink.'" rel="'.$id.'">'.$pLink['label'].'</a></li>',$pLink );
-			$next_link = apply_filters( 'mc_next_link','		<li class="my-calendar-next"><a href="' . $nextLink .'" rel="'.$id.'">'.$nLink['label'].'</a></li>',$nLink );
+			$previous_link = apply_filters( 'mc_previous_link','		<li class="my-calendar-prev"><a href="' . $prevLink.'" rel="nofollow" data-rel="'.$id.'">'.$pLink['label'].'</a></li>',$pLink );
+			$next_link = apply_filters( 'mc_next_link','		<li class="my-calendar-next"><a href="' . $nextLink .'" rel="nofollow" data-rel="'.$id.'">'.$nLink['label'].'</a></li>',$nLink );
 			$nav = '
 				<div class="my-calendar-nav">
 					<ul>
@@ -1174,37 +1187,38 @@ function my_calendar( $name, $format, $category, $time='month', $ltype='', $lval
 }
 
 function my_category_key( $category ) {
-global $wpdb;
+	global $wpdb;
 	$url = plugin_dir_url( __FILE__ );
 	$dir = plugin_dir_path( __FILE__ );
 	$mcdb = $wpdb;
-	$category_key = '';
-if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
-	$cat_details = '';
-			$cat_limit = mc_select_category($category,'all','category');
-			$sql = "SELECT * FROM " . MY_CALENDAR_CATEGORIES_TABLE . " $cat_limit ORDER BY category_name ASC";
-			$cat_details = $mcdb->get_results($sql);
-			$category_key .= '<div class="category-key">
-			<h3>'.__('Categories','my-calendar')."</h3>\n<ul>\n";
-				$subpath = (is_custom_icon())?'my-calendar-custom/':'my-calendar/images/icons/';
-				$path = str_replace( basename( $dir ) . '/','',$url) . $subpath;
-			foreach($cat_details as $cat_detail) {
-				$hex = ( strpos( $cat_detail->category_color,'#' ) !== 0 )?'#':'';
-				$title_class = sanitize_title($cat_detail->category_name);
-				if ( $cat_detail->category_private == 1 ) { $title_class .= " private"; }
-				$url = add_query_arg( 'mcat',$cat_detail->category_id, mc_get_current_url() );
-				if ($cat_detail->category_icon != "" && get_option('mc_hide_icons')!='true') {
-					$category_key .= '<li class="cat_'.$title_class.'"><a href="'.$url.'"><span class="category-color-sample"><img src="'.$path.$cat_detail->category_icon.'" alt="" style="background:'.$hex.$cat_detail->category_color.';" /></span>'.stripcslashes($cat_detail->category_name)."</a></li>\n";
-				} else {
-					$category_key .= '<li class="cat_'.$title_class.'"><a href="'.$url.'"><span class="category-color-sample no-icon" style="background:'.$hex.$cat_detail->category_color.';"> &nbsp; </span>'.stripcslashes($cat_detail->category_name)."</a></li>\n";			
-				}
-			}
-			if ( isset( $_GET['mcat'] ) ) {
-				$category_key .= "<li><a href='".mc_get_current_url()."'>".__('All Categories','my-calendar')."</a></li>";
-			}
-			$category_key .= "</ul>\n</div>";
-		$category_key = apply_filters('mc_category_key',$category_key,$cat_details);
-		return $category_key;
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }	
+	$key = '';
+	$cat_limit = mc_select_category( $category, 'all', 'category' );
+	$sql = "SELECT * FROM " . MY_CALENDAR_CATEGORIES_TABLE . " $cat_limit ORDER BY category_name ASC";
+	$categories = $mcdb->get_results( $sql );
+	$key .= '<div class="category-key">
+	<h3>'.__('Categories','my-calendar')."</h3>\n<ul>\n";
+	$subpath = (is_custom_icon())?'my-calendar-custom/':'my-calendar/images/icons/';
+	$path = str_replace( basename( $dir ) . '/','',$url) . $subpath;
+	foreach ( $categories as $cat ) {
+		$hex = ( strpos( $cat->category_color,'#' ) !== 0 )?'#':'';
+		$class = sanitize_title( $cat->category_name );
+		if ( $cat->category_private == 1 ) { 
+			$class .= " private"; 
+		}
+		$url = add_query_arg( 'mcat', $cat->category_id, mc_get_current_url() );
+		if ( $cat->category_icon != "" && get_option( 'mc_hide_icons' ) != 'true' ) {
+			$key .= '<li class="cat_'.$class.'"><a href="'.$url.'"><span class="category-color-sample"><img src="'.$path.$cat->category_icon.'" alt="" style="background:'.$hex.$cat->category_color.';" /></span>'.stripcslashes( $cat->category_name )."</a></li>\n";
+		} else {
+			$key .= '<li class="cat_'.$class.'"><a href="'.$url.'"><span class="category-color-sample no-icon" style="background:'.$hex.$cat->category_color.';"> &nbsp; </span>'.stripcslashes( $cat->category_name )."</a></li>\n";			
+		}
+	}
+	if ( isset( $_GET['mcat'] ) ) {
+		$key .= "<li><a href='".mc_get_current_url()."'>".__('All Categories','my-calendar')."</a></li>";
+	}
+	$key .= "</ul>\n</div>";
+	$key = apply_filters( 'mc_category_key',$key,$categories );
+	return $key;
 }
 
 function mc_rss_links( $y, $m, $next ) {
@@ -1358,7 +1372,7 @@ function mc_filters( $args ) {
 function my_calendar_categories_list( $show='list',$context='public',$group='single' ) {
 	global $wpdb;
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	if ( isset($_GET['mc_id']) ) { return; }
 	$output = '';
 	$current_url = mc_get_current_url();
@@ -1422,7 +1436,7 @@ function my_calendar_categories_list( $show='list',$context='public',$group='sin
 function mc_access_list( $show='list',$group='single' ) {
 	global $wpdb;
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	if ( isset( $_GET['mc_id'] ) ) { return; }
 	$output = '';
 	$current_url = mc_get_current_url();
@@ -1505,17 +1519,17 @@ function mc_build_url( $add, $subtract, $root='' ) {
 	unset( $variables['page_id'] );
 	if ( $root == '' ) {
 	// root is set to empty when I want to reference the current location
-		$char = ( $wp_rewrite->using_permalinks() || is_front_page() || is_archive() )?'?':'&amp;';
+		$char = ( $wp_rewrite->using_permalinks() || is_front_page() || is_archive() ) ? '?' : '&amp;';
 	} else {
-		$char = ( $wp_rewrite->using_permalinks() )?'?':'&amp;'; // this doesn't work -- may *never* need to be &. Consider	
+		$char = ( $wp_rewrite->using_permalinks() ) ? '?' : '&amp;'; // this doesn't work -- may *never* need to be &. Consider	
 	}
-	return $home.$char.http_build_query($variables, '', '&amp;');
+	return $home.$char.http_build_query( $variables, '', '&amp;' );
 }
 
 function my_calendar_show_locations( $show='list',$datatype='name',$template='' ) {
 	global $wpdb;
 	$mcdb = $wpdb;
-	if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	switch ( $datatype ) {
 		case "name": case "location": $data = "location_label";break;
 		case "city":$data = "location_city";break;
@@ -1574,7 +1588,7 @@ function my_calendar_searchform($type) {
 function my_calendar_locations_list( $show='list',$type='saved',$datatype='name', $group='single' ) {
 global $wpdb;
 	$mcdb = $wpdb;
-	  if ( get_option( 'mc_remote' ) == 'true' && function_exists('mc_remote_db') ) { $mcdb = mc_remote_db(); }
+	  if ( get_option( 'mc_remote' ) == 'true' && function_exists( 'mc_remote_db' ) ) { $mcdb = mc_remote_db(); }
 	$output = '';
 	if ( isset( $_GET['mc_id'] ) ) { return; }
 	if ( $type == 'saved' ) {
