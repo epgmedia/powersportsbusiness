@@ -437,7 +437,6 @@ function the_content_limit($max_char, $more_link_text = '(more...)', $striptease
 	}
 	else if ((strlen($content)>$max_char) && ($espacio = strpos($content, " ", $max_char ))) {
 		$content = substr($content, 0, $espacio);
-		$content = $content;
 		echo "<p>";
 		echo $content;
 		echo "...";
@@ -470,4 +469,32 @@ function snowriter() {
 			echo $writer; if ($jobtitle) echo ', '.$jobtitle; echo '<br />';
 		}
 	}
+}
+
+function targetted_ad_code($string) {
+
+	$sww_uri = strtolower( $_SERVER["REQUEST_URI"] );
+
+	if ( strpos( $sww_uri, '/power-50/') !== false ) {
+		$searchstr = "div-gpt-ad-1375801013938";
+		$replacestr = "div-gpt-ad-1375817072470";
+		$string = str_ireplace($searchstr, $replacestr, $string);
+
+		$searchstr = "PSB_ROS";
+		$replacestr = "PSB_P50";
+		$string = str_ireplace($searchstr, $replacestr, $string);
+
+	}
+
+	if ( strpos( $sww_uri, '/institute/') !== false ) {
+		$searchstr = "div-gpt-ad-1375801013938";
+		$replacestr = "div-gpt-ad-1375816978942";
+		$string = str_ireplace($searchstr, $replacestr, $string);
+
+		$searchstr = "PSB_ROS";
+		$replacestr = "PSB_AIM";
+		$string = str_ireplace($searchstr, $replacestr, $string);
+	}
+
+	return $string;
 }

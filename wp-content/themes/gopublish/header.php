@@ -139,7 +139,6 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 </script>
 
 <?php
-$sww_uri = strtolower($_SERVER["REQUEST_URI"]);
 $openxcode = "
     googletag.cmd.push(function() {
         googletag.defineSlot('/35190362/PSB_ROS_160_SB1', [[120, 240], [125, 125], [120, 600], [160, 160], [160, 240], [160, 600], [160, 300]], 'div-gpt-ad-1375801013938-0').addService(googletag.pubads());
@@ -166,30 +165,11 @@ $openxcode = "
     });
 ";
 
-if (strpos($sww_uri,'/power-50/') !== false) {
-    $searchstr = "div-gpt-ad-1375801013938";
-    $replacestr = "div-gpt-ad-1375817072470";
-    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
+$openxcode = targetted_ad_code($openxcode);
 
-    $searchstr = "PSB_ROS";
-    $replacestr = "PSB_P50";
-    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-}
-
-if (strpos($sww_uri,'/institute/') !== false) {
-    $searchstr = "div-gpt-ad-1375801013938";
-    $replacestr = "div-gpt-ad-1375816978942";
-    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-
-    $searchstr = "PSB_ROS";
-    $replacestr = "PSB_AIM";
-    $openxcode = str_ireplace($searchstr, $replacestr, $openxcode);
-}
 ?>
 <script type='text/javascript'>
-    <?php echo $openxcode ?>
-
+    <?php echo $openxcode; ?>
 </script>
 
 <?php wp_head(); ?>
