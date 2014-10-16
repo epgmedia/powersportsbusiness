@@ -3,8 +3,8 @@ Contributors: whiletrue
 Donate link: http://www.whiletrue.it/
 Tags: most, least, read, post, posts, most read, least read, more, less, more read, top read, top, less read, sidebar, widget, plugin, links 
 Requires at least: 2.9+
-Tested up to: 3.8.1
-Stable tag: 2.1.5
+Tested up to: 4.0
+Stable tag: 2.1.7
 
 Provide two widgets, showing lists of the most and reast read posts.
 
@@ -73,6 +73,12 @@ E.g. 50x50 pixels images, floating on the right:
 .mlrp_ul img { width: 50px; height: 50px; float: right; }
 
 == Changelog ==
+
+= 2.1.7 =
+* Fixed: Excluded words cleaning
+
+= 2.1.6 =
+* Changed: Plugin tested up WordPress 4.0
 
 = 2.1.5 =
 * Added: Screenshots
