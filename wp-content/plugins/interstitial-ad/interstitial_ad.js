@@ -1,6 +1,17 @@
 
 jQuery(document).ready( function( $ ) {
 
+    $log = true;
+
+    function print_log($log_value) {
+        "use strict";
+
+        if ( $on !== true ) {
+            return;
+        }
+
+        console.log($log_value);
+    }
 
     var googletag = googletag || {};
     googletag.cmd = googletag.cmd || [];
@@ -26,6 +37,9 @@ jQuery(document).ready( function( $ ) {
         googletag.defineOutOfPageSlot( ad_data.ad_position, ad_data.position_tag + '-oop' ).addService( googletag.pubads() );
         googletag.pubads().addEventListener('slotRenderEnded', function(event) {
             var f_slot = event.slot.k;
+
+            console.log(event);
+
             if ( ( f_slot === ad_data.ad_position) && !event.isEmpty ) {
                 jQuery( '.interstitialAd' ).show();
             }
