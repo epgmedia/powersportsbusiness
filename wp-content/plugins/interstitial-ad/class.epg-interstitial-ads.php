@@ -21,8 +21,7 @@ class epg_interstitial_ads {
      */
     public function __construct() {
 
-	    //$this->page_code_id = get_option('epg-ad-code-id');
-	    $this->page_code_id = 'OPE_ROS_Roadblock';
+	    $this->page_code_id = get_option('epg-ad-code-id');
 	    $this->dir_uri      = plugins_url( null, __FILE__ );
 
 	    $this->data['ad_position'] = '/35190362/' . $this->page_code_id;
