@@ -16,6 +16,7 @@
 !/wp-content
 /wp-content/**
 !/wp-content/plugins**
+!/wp-content/mu-plugins**
 !/wp-content/themes**
 !/wp-content/maintenance.php
 !/wp-content/index.php
@@ -28,9 +29,6 @@
 *.log
 *_log.txt
 error_log
-
-
-
 
 ########################
 # Weird Files and logs #
