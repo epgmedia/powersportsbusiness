@@ -21,11 +21,22 @@ class epg_interstitial_ads {
      */
     public function __construct() {
 
-	    $this->page_code_id = get_option('epg-ad-code-id');
-	    $this->dir_uri      = get_template_directory_uri() . '/tools/interstitial-ad';
+	    //$this->page_code_id = get_option('epg-ad-code-id');
+	    $this->page_code_id = 'OPE_ROS_Roadblock';
+	    $this->dir_uri      = plugins_url( null, __FILE__ );
 
 	    $this->data['ad_position'] = '/35190362/' . $this->page_code_id;
 	    $this->data['position_tag'] = 'div-gpt-ad-1398116137114-0';
+
+	    add_action( 'admin_init', array( $this, 'setting_init' ) );
+	    add_action( 'wp_enqueue_scripts', array($this, 'scripts_and_styles') );
+
+    }
+
+	public function scripts_and_styles() {
+
+		wp_register_style( 'interstitial_css', $this->dir_uri . '/interstitial_ad.css' );
+		wp_enqueue_style( 'interstitial_css' );
 
 		wp_register_script(
 			'epg_interstitial_ad',
@@ -38,30 +49,7 @@ class epg_interstitial_ads {
 		wp_localize_script( 'epg_interstitial_ad', 'ad_data', $this->data );
 		wp_enqueue_script( 'epg_interstitial_ad' );
 
-	    add_action( 'admin_init', array( $this, 'setting_init' ) );
-	    add_action( 'after_header', array($this, 'adPosition'), 100, '' );
-
-    }
-
-	public function adPosition() {
-        ?>
-		<div class='interstitialAd'>
-			<div class="close-interstitial">X</div>
-			<!-- Roadblock -->
-			<div id='<?php echo $this->data['position_tag']; ?>' style='width:1px; height:1px;'>
-				<script type='text/javascript'>
-					googletag.cmd.push(function() { googletag.display('<?php echo $this->data['position_tag']; ?>'); });
-				</script>
-			</div>
-			<!-- Roadblock out-of-page -->
-			<div id='<?php echo $this->data['position_tag']; ?>-oop'>
-				<script type='text/javascript'>
-					googletag.cmd.push(function() { googletag.display('<?php echo $this->data['position_tag']; ?>-oop'); });
-				</script>
-			</div>
-		</div>
-		<?php
-    }
+	}
 
 	public function setting_init() {
 
@@ -90,3 +78,4 @@ class epg_interstitial_ads {
 	}
 }
 
+new epg_interstitial_ads();
