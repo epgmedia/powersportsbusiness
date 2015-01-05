@@ -155,7 +155,7 @@ $openxcode = "
         googletag.defineSlot('/35190362/PSB_ROS_300_Mid2', [300, 250], 'div-gpt-ad-1375801013938-9').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_ROS_300_UR', [300, 250], 'div-gpt-ad-1375801013938-10').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_ROS_Footerboard', [[468, 60],[728, 90]], 'div-gpt-ad-1375801013938-11').addService(googletag.pubads());
-        googletag.defineSlot('/35190362/PSB_ROS_Leaderboard', [728, 90], 'div-gpt-ad-1375801013938-12').addService(googletag.pubads());
+        googletag.defineSlot('/35190362/PSB_ROS_Leaderboard', [[728, 90], [970, 90]], 'div-gpt-ad-1375801013938-12').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_ROS_middle468', [468, 60], 'div-gpt-ad-1375801013938-13').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_ROS_middle468_2', [468, 60], 'div-gpt-ad-1375801013938-14').addService(googletag.pubads());
         googletag.defineSlot('/35190362/PSB_Fox_Targeted_728', [728, 90], 'div-gpt-ad-1391092863898-0').addService(googletag.pubads());

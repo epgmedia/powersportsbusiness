@@ -22,9 +22,6 @@ function gopublish_theme_setup() {
 	include( TEMPLATEPATH . "/tools/productshowcase.php" );
 	include( TEMPLATEPATH . "/tools/pagewidget.php" );
 
-	/** Interstitial Ads */
-	include( TEMPLATEPATH . '/tools/interstitial-ad/class.epg-interstitial-ads.php' );
-
 	/** Wallpaper Ads */
 	include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
 
@@ -89,9 +86,6 @@ function gopublish_theme_setup() {
 	/** Various Functions */
 	// Register the sidebars
 	epgmedia_register_sidebars();
-
-	// Insert Interstitial Ads
-	new epg_interstitial_ads();
 
 }
 
