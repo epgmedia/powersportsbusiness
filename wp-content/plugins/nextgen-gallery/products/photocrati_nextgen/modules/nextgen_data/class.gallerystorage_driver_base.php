@@ -490,22 +490,28 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
                             $retval = in_array(image_type_to_mime_type($image_type), $valid_types);
                         }
                     }
-
                     else {
                         $file_info = @getimagesize($filename);
                         if (isset($file_info[2])) {
                             $retval = in_array(image_type_to_mime_type($file_info[2]), $valid_types);
                         }
-
-                        // We'll assume things are ok as there isn't much else we can do
-                        else $retval = TRUE;
                     }
                 }
 
                 // Is this a valid extension?
-                // TODO: Should we remove this?
                 else if (strpos($type, 'octet-stream') !== FALSE && preg_match($valid_regex, $type)) {
-                    $retval = TRUE;
+                    // If we can, we'll verify the mime type
+                    if (function_exists('exif_imagetype')) {
+                        if (($image_type = @exif_imagetype($filename)) !== FALSE) {
+                            $retval = in_array(image_type_to_mime_type($image_type), $valid_types);
+                        }
+                    }
+                    else {
+                        $file_info = @getimagesize($filename);
+                        if (isset($file_info[2])) {
+                            $retval = in_array(image_type_to_mime_type($file_info[2]), $valid_types);
+                        }
+                    }
                 }
             }
         }
@@ -626,7 +632,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 	 * @param type $filename specifies the name of the file
 	 * @return C_Image
 	 */
-	function upload_base64_image($gallery, $data, $filename=FALSE, $image_id=FALSE)
+    function upload_base64_image($gallery, $data, $filename=FALSE, $image_id=FALSE, $override=FALSE)
 	{
         $settings = C_NextGen_Settings::get_instance();
         $memory_limit = intval(ini_get('memory_limit'));
@@ -663,7 +669,7 @@ class Mixin_GalleryStorage_Driver_Base extends Mixin
 
             // Prevent duplicate filenames: check if the filename exists and
             // begin appending '-i' until we find an open slot
-            if (!ini_get('safe_mode') && @file_exists($abs_filename))
+            if (!ini_get('safe_mode') && @file_exists($abs_filename) && !$override)
             {
                 $file_exists = TRUE;
                 $i = 0;

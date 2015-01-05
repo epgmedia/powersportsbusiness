@@ -121,6 +121,10 @@ if(!$ajaxRefresh) :
 
   <?php  if($order !== false): ?>
   <h2><?php _e( 'Order Number' , 'cart66' ); ?>: <?php echo $order->trans_id ?></h2>
+  <?php if($order->viewed == 0 && Cart66Setting::getValue('cart66_hurricane_subdomain') || true): 
+          // Get Eligible Amount
+          $comissionable_total =  $order->getAffiliateTotal();
+    ?><img src='https://<?php echo Cart66Setting::getValue('cart66_hurricane_subdomain'); ?>.hurricane.io/sales/<?php echo $order->trans_id ?>?total=<?php echo $comissionable_total; ?>' style="display:none;" height="0" width="0" /><?php endif; ?>
 
   <?php 
   if(CART66_PRO && $order->hasAccount() == 1) {
@@ -207,7 +211,8 @@ if(!$ajaxRefresh) :
         <?php if(!empty($order->bill_country)): ?>
           <?php echo $order->bill_country ?><br/>
         <?php endif; ?>
-        <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])): ?><br />
+
+        <?php if(is_array($additional_fields = maybe_unserialize($order->additional_fields)) && isset($additional_fields['billing'])): ?>
           <?php foreach($additional_fields['billing'] as $af): ?>
             <?php echo $af['label']; ?>: <?php echo $af['value']; ?><br />
           <?php endforeach; ?>
@@ -308,6 +313,8 @@ if(!$ajaxRefresh) :
         </tr>
       <?php endif; ?>
     <?php endif; ?>
+
+   
     <?php if(isset($order->custom_field) && $order->custom_field != ''): ?>    
       <tr>
         <td colspan="3">

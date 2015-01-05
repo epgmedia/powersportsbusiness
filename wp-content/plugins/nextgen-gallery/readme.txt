@@ -1,8 +1,8 @@
 === NextGEN Gallery ===
 Contributors: photocrati
-Tags:gallery,image,images,photo,photos,picture,pictures,slideshow,flash,media,thumbnails,photo-albums,nextgen-gallery,nextgen
+Tags: nextgen, nextgen gallery, gallery, galleries, image, images, image gallery, photo, photos, photo gallery, picture, pictures, picture gallery, album, albums, photo albums, image album, media, media gallery, thumbnails, thumbnail gallery, thumbnail galleries, slideshow, slideshows, slideshow gallery, slideshow galleries, fancybox, lightbox, responsive, responsive gallery, responsive galleries, wordpress responsive gallery, nextcellent, wordpress gallery plugin, wordpress photo gallery plugin, wp gallery, wp gallery plugins, best gallery plugin, free photo gallery, singlepic, image captions imagebrowser, watermarks, watermarking, photography, photographer
 Requires at least: 3.6.1
-Tested up to: 3.9.1
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2
 
@@ -75,10 +75,6 @@ This program is free software; you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-** Please note **
-
-NextGEN Gallery's flash slideshow option is powered by the JW Image Rotator from Long Tail Video. The Image Rotator is provided free as part of our plugin package thanks to a special arrangement with Long Tail Video. Over time, we will be moving away from reliance on this file. For more information, see the Long Tail Video website: http://www.longtailvideo.com.
 
 == Installation ==
 
@@ -199,6 +195,28 @@ For more information, feel free to visit the official website for the NextGEN Ga
 
 == Changelog ==
 
+= V2.0.66.37 - 12.18.2014 =
+* NEW:     Admin notice manager
+* Secured: Removed flash slideshow support
+* Secured: Image upload mechanism
+* Fixed:   Accordion styling in WordPress 4.1
+* Fixed:   Sorting images in WordPress 4.1
+
+= V2.0.66.33 - 11.24.2014 =
+* Fixed:   Broken NextGEN Pro ecommerce-related shortcodes
+* Fixed:   Spanish PO file
+
+= V2.0.66.31 - 11.21.2014 =
+* Fixed:   Broken shortcodes with WordPress 4.0.1
+
+= V2.0.66.29 - 09.17.2014 =
+* NEW:     Added skip_excluding_globally_excluded_images property to displayed gallery objects
+* Fixed:   SQL generation for random image selection
+* Fixed:   Adjust regex for replacing displayed gallery placeholder images
+* Fixed:   Removed filters to home_url needed previously for WMPL compatibility
+* Fixed:   Use canonical redirects when appropriate
+* Fixed:   Ability to override image files using XML-RPC
+
 = V2.0.66.27 - 08.18.2014 =
 * Fixed:   Missing class.frame_communication_option_handerl.php error
 
@@ -233,7 +251,7 @@ For more information, feel free to visit the official website for the NextGEN Ga
 * NEW: 	   Spanish (es_ES) language thanks to Andrew Kurtis at WebHostingHub
 * Changed: Updated Czech language thanks to Separatista; additional thanks to Martin Krizek for the original translation who was mistakenly unaccredited
 * Changed: "Upgrade to Pro" page has new design, advertises for NextGEN Plus
-* Changed: Basic Albums templates now given the image counter <p> element the class 'ngg-album-gallery-image-counter' (by user request)
+* Changed: Basic Albums templates now given the image counter P element the class 'ngg-album-gallery-image-counter' (by user request)
 * Changed: Gallery widgets now apply height:auto to their element; fixes compatibility with some themes
 * Changed: Random galleries should be substantially faster now (1000% or more for large image tables)
 * Fixed:   Complete WPML compatibility
@@ -247,7 +265,7 @@ For more information, feel free to visit the official website for the NextGEN Ga
 * Fixed:   Multisite gallery path tooltip gave a wrong default setting
 * Fixed:   Flush 'all' caches when pope_module_list setting changes
 * Fixed:   Don't enqueue related images css in the admin
-* Fixed:   Basic Slideshows fixes WP creating extraneous <p> element above the slideshow display
+* Fixed:   Basic Slideshows fixes WP creating extraneous P element above the slideshow display
 * Fixed:   Basic Singlepic will now display images marked 'excluded' in the admin
 * Fixed:   Admin pages can now update when the "Save" button text has been translated
 

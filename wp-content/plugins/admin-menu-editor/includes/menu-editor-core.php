@@ -75,6 +75,7 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 	//Our personal copy of the request vars, without any "magic quotes".
 	private $post = array();
 	private $get = array();
+	private $originalPost = array();
 
 	function init(){
 		$this->sitewide_options = true;
@@ -267,6 +268,8 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 
 		//Compatibility fix for bbPress.
 		$this->apply_bbpress_compat_fix();
+		//Compatibility fix for WooCommerce (woo).
+		$this->apply_woocommerce_compat_fix();
 		//Compatibility fix for WordPress Mu Domain Mapping.
 		$this->apply_wpmu_domain_mapping_fix();
 
@@ -387,6 +390,23 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 
 			if ( empty($submenu[$parent]) ) {
 				unset($submenu[$parent]);
+			}
+		}
+
+		//Remove consecutive submenu separators. This can happen if there are separators around a menu item
+		//that is not accessible to the current user.
+		foreach ($submenu as $parent => $items) {
+			$found_separator = false;
+			foreach ($items as $index => $item) {
+				//Separator have a dummy #anchor as a URL. See wsMenuEditorExtras::create_submenu_separator().
+				if (strpos($item[2], '#submenu-separator-') === 0) {
+					if ( $found_separator ) {
+						unset($submenu[$parent][$index]);
+					}
+					$found_separator = true;
+				} else {
+					$found_separator = false;
+				}
 			}
 		}
 
@@ -1030,6 +1050,7 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			$priority--;
 		}
 
+		//TODO: Include more details like menu title and template ID for debugging purposes (log output).
 		$this->page_access_lookup[$item['url']][$priority] = $item['access_level'];
 	}
 
@@ -1055,9 +1076,6 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 		$new_submenu = array();
 		$this->title_lookups = array();
 		
-		//Sort the menu by position
-		uasort($tree, 'ameMenuItem::compare_position');
-
 		//Prepare the top menu
 		$first_nonseparator_found = false;
 		foreach ($tree as $topmenu){
@@ -1086,9 +1104,7 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			$has_submenu_icons = false;
 			if( !empty($topmenu['items']) ){
 				$items = $topmenu['items'];
-				//Sort by position
-				uasort($items, 'ameMenuItem::compare_position');
-				
+
 				foreach ($items as $item) {
 					//Skip missing and hidden items
 					if ( !empty($item['missing']) || !empty($item['hidden']) ) {
@@ -1104,6 +1120,9 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 					//Keep track of which menus have items with icons.
 					$has_submenu_icons = $has_submenu_icons || !empty($item['has_submenu_icon']);
 				}
+
+				//Sort by position
+				uasort($new_items, 'ameMenuItem::compare_position');
 			}
 
 			//The ame-has-submenu-icons class lets us change the appearance of all submenu items at once,
@@ -1115,6 +1134,9 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			$topmenu['items'] = $new_items;
 			$new_tree[] = $topmenu;
 		}
+
+		//Sort the menu by position
+		uasort($new_tree, 'ameMenuItem::compare_position');
 
 		//Use only the highest-priority capability for each URL.
 		foreach($this->page_access_lookup as $url => $capabilities) {
@@ -1441,9 +1463,24 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 				try {
 					$menu = ameMenu::load_json($post['data'], true);
 				} catch (InvalidMenuException $ex) {
-					//Or redirect & display the error message
-					wp_redirect( add_query_arg('message', 2, $url) );
-					die();
+					$debugData = '';
+					$debugData .= "Exception:\n"      . $ex->getMessage() . "\n\n";
+					$debugData .= "Used POST data:\n" . print_r($this->post, true) . "\n\n";
+					$debugData .= "Original POST:\n"  . print_r($this->originalPost, true) . "\n\n";
+					$debugData .= "\$_POST global:\n" . print_r($_POST, true);
+
+					$debugData = sprintf(
+						"<textarea rows=\"30\" cols=\"100\">%s</textarea>",
+						htmlentities($debugData)
+					);
+
+					wp_die(
+						"Error: Failed to decode menu data!<br><br>\n"
+						. "Please send this debugging information to the developer: <br>"
+						. $debugData
+					);
+
+					return;
 				}
 
 				//Save the custom menu
@@ -1915,6 +1952,14 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 
 		$current_url = $this->parse_url($current_url);
 
+		//Special case: if post_type is not specified for edit.php and post-new.php,
+		//WordPress assumes it is "post". Here we make this explicit.
+		if ( $this->endsWith($current_url['path'], '/wp-admin/edit.php') || $this->endsWith($current_url['path'], '/wp-admin/post-new.php') ) {
+			if ( !isset($current_url['params']['post_type']) ) {
+				$current_url['params']['post_type'] = 'post';
+			}
+		}
+
 		//Hook-based submenu pages can be accessed via both "parent-page.php?page=foo" and "admin.php?page=foo".
 		//WP has a private API function for determining the canonical parent page for the current request.
 		if ( $this->endsWith($current_url['path'], '/admin.php') && is_callable('get_admin_page_parent') ) {
@@ -1955,16 +2000,42 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 				}
 			}
 
+			//Same as above - default post type is "post".
+			if ( $this->endsWith($item_url['path'], '/wp-admin/edit.php') || $this->endsWith($item_url['path'], '/wp-admin/post-new.php') ) {
+				if ( !isset($item_url['params']['post_type']) ) {
+					$item_url['params']['post_type'] = 'post';
+				}
+			}
+
+			//Special case: In WP 4.0+ the URL of the "Customize" menu changes often due to a "return" query parameter
+			//that contains the current page URL. To reliably recognize this item, we should ignore that parameter.
+			if ( $this->endsWith($item_url['path'], 'customize.php') ) {
+				unset($item_url['params']['return']);
+			}
+
 			//The current URL must match all query parameters of the item URL.
-			$different_params = array_diff_assoc($item_url['params'], $current_url['params']);
+			$different_params = $this->arrayDiffAssocRecursive($item_url['params'], $current_url['params']);
 
 			//The current URL must have as few extra parameters as possible.
-			$extra_params = array_diff_assoc($current_url['params'], $item_url['params']);
+			$extra_params = $this->arrayDiffAssocRecursive($current_url['params'], $item_url['params']);
 
 			if ( $is_close_match && (count($different_params) == 0) && (count($extra_params) < $best_extra_params) ) {
 				$best_item = $item;
 				$best_extra_params = count($extra_params);
 			}
+		}
+
+		//Special case for CPTs: When the "Add New" menu is disabled by CPT settings (show_ui, etc), and someone goes
+		//to add a new item, WordPress highlights the "$CPT-Name" item as the current one. Lets do the same for
+		//consistency. See also: /wp-admin/post-new.php, lines #20 to #40.
+		if (
+			($best_item === null)
+			&& isset($current_url['params']['post_type'])
+			&& (!empty($current_url['params']['post_type']))
+			&& $this->endsWith($current_url['path'], '/wp-admin/post-new.php')
+			&& isset($this->reverse_item_lookup['edit.php?post_type=' . $current_url['params']['post_type']])
+		) {
+			$best_item = $this->reverse_item_lookup['edit.php?post_type=' . $current_url['params']['post_type']];
 		}
 
 		$cached_item = $best_item;
@@ -1998,6 +2069,44 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 		$parsed['params'] = $params;
 
 		return $parsed;
+	}
+
+	/**
+	 * Get the difference of two arrays.
+	 *
+	 * This methods works like array_diff_assoc(), except it also supports nested arrays by comparing them recursively.
+	 *
+	 * @param array $array1 The base array.
+	 * @param array $array2 The array to compare to.
+	 * @return array An associative array of values from $array1 that are not present in $array2.
+	 */
+	private function arrayDiffAssocRecursive($array1, $array2) {
+		$difference = array();
+
+		foreach($array1 as $key => $value) {
+			if ( !array_key_exists($key, $array2) ) {
+				$difference[$key] = $value;
+				continue;
+			}
+
+			$otherValue = $array2[$key];
+			if ( is_array($value) !== is_array($otherValue) ) {
+				//If only one of the two values is an array then they can't be equal.
+				$difference[$key] = $value;
+			} elseif ( is_array($value) ) {
+				//Compare array values recursively.
+				$subDiff = $this->arrayDiffAssocRecursive($value, $otherValue);
+				if( !empty($subDiff) ) {
+					$difference[$key] = $subDiff;
+				}
+
+			//Like the original array_diff_assoc(), we compare the values as strings.
+			} elseif ( (string)$value !== (string)$array2[$key] ) {
+				$difference[$key] = $value;
+			}
+		}
+
+		return $difference;
 	}
 
 	/**
@@ -2107,7 +2216,7 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 	 * @return void
 	 */
 	function capture_request_vars(){
-		$this->post = $_POST;
+		$this->post = $this->originalPost = $_POST;
 		$this->get = $_GET;
 
 		if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() ) {
@@ -2321,6 +2430,36 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			if ( isset($index, $this->default_wp_submenu['index.php'][$index]) ) {
 				unset($this->default_wp_submenu['index.php'][$index]);
 			}
+		}
+	}
+
+	/**
+	 * Compatibility fix for WooCommerce 2.2.1+.
+	 * Summary: When AME is active, an unusable WooCommerce -> WooCommerce menu item shows up. Here we remove it.
+	 *
+	 * WooCommerce creates a top level "WooCommerce" menu with no callback. By default, WordPress automatically adds
+	 * a submenu item with the same name. However, since the item doesn't have a callback, it is unusable and clicking
+	 * it just triggers a "Cannot load woocommerce" error. So WooCommerce removes this item in an admin_head hook to
+	 * hide it. With AME active, the item shows up anyway, and users get confused by the error.
+	 *
+	 * Fix it by removing the problematic menu item.
+	 *
+	 * Caution: If the user hides all WooCommerce submenus but not the top level menu, the WooCommerce menu will still
+	 * show up but be inaccessible. This may be slightly counter-intuitive, but seems reasonable.
+	 */
+	private function apply_woocommerce_compat_fix() {
+		if ( !isset($this->default_wp_submenu, $this->default_wp_submenu['woocommerce']) ) {
+			return;
+		}
+
+		$badSubmenuExists = isset($this->default_wp_submenu['woocommerce'][0])
+			&& isset($this->default_wp_submenu['woocommerce'][0][2])
+			&& ($this->default_wp_submenu['woocommerce'][0][2] === 'woocommerce');
+		$anotherSubmenuExists = isset($this->default_wp_submenu['woocommerce'][1]);
+
+		if ( $badSubmenuExists && $anotherSubmenuExists ) {
+			$this->default_wp_submenu['woocommerce'][0] = $this->default_wp_submenu['woocommerce'][1];
+			unset($this->default_wp_submenu['woocommerce'][1]);
 		}
 	}
 
