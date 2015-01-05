@@ -18,126 +18,145 @@ class sno_category extends WP_Widget {
 
 	function widget($args, $instance) {
 		extract($args);
- 		$totalstories=$instance['number']+$instance['number-headlines'];		
-		if (($instance['category'] == -1) || ($totalstories <= 0)) {} else {
-		echo '<div class="widgetwrap">';
+ 		$totalstories=$instance['number']+$instance['number-headlines'];
+		if (($instance['category'] == -1) || ($totalstories <= 0)) {
 
+		} else {
 
-				$widget = $this->id; $sidebartest = get_option('sidebars_widgets'); 
-				$columns = get_theme_mod('sno-layout'); 
-					if (($columns == "Option 3") || ($columns == "Option 6")) { $columnwidth = "even"; } else { $columnwidth = "wide"; }
-					
-				foreach ($sidebartest["sidebar-1"] as $key => $value ) { 
-					if ($widget == $value) {
-						$instance['sidebarname'] = 'Non-Home Sidebar'; 
-						$instance['photowidth'] = get_option('non_home_right_column');
-						}
+			$widget = $this->id; $sidebartest = get_option('sidebars_widgets');
+			$columns = get_theme_mod('sno-layout');
+			if (($columns == "Option 3") || ($columns == "Option 6")) {
+				$columnwidth = "even";
+			} else {
+				$columnwidth = "wide";
+			}
+
+			foreach ($sidebartest["sidebar-1"] as $key => $value ) {
+				if ($widget == $value) {
+					$instance['sidebarname'] = 'Non-Home Sidebar';
+					$instance['photowidth'] = get_option('non_home_right_column');
 				}
-				foreach ($sidebartest["sidebar-2"] as $key => $value ) { 
-					if ($widget == $value) {
-						$instance['sidebarname'] = 'Home Main Column'; 
-						$instance['photowidth'] = get_option('home_right_column');
-						}
+			}
+			foreach ($sidebartest["sidebar-2"] as $key => $value ) {
+				if ($widget == $value) {
+					$instance['sidebarname'] = 'Home Main Column';
+					$instance['photowidth'] = get_option('home_right_column');
 				}
-				foreach ($sidebartest["sidebar-3"] as $key => $value ) { 
-					if (($widget == $value) && ($columnwidth == "even")) {
-						$instance['sidebarname'] = 'Home Bottom Left'; 
-						$instance['photowidth'] = get_option('home_left_column');
-						}
-					if (($widget == $value) && ($columnwidth == "wide")) {
-						$instance['sidebarname'] = 'Home Bottom Narrow';
-						$instance['photowidth'] = get_option('home_narrow_column');
-						}
+			}
+			foreach ($sidebartest["sidebar-3"] as $key => $value ) {
+				if (($widget == $value) && ($columnwidth == "even")) {
+					$instance['sidebarname'] = 'Home Bottom Left';
+					$instance['photowidth'] = get_option('home_left_column');
 				}
-				foreach ($sidebartest["sidebar-4"] as $key => $value ) { 
-					if (($widget == $value) && ($columnwidth == "even")) {
-						$instance['sidebarname'] = 'Home Bottom Right'; 
-						$instance['photowidth'] = get_option('home_center_column');
-						}
-					if (($widget == $value) && ($columnwidth == "wide")) {
-						$instance['sidebarname'] = 'Home Bottom Wide';
-						$instance['photowidth'] = get_option('home_wide_column');
-						}
+				if (($widget == $value) && ($columnwidth == "wide")) {
+					$instance['sidebarname'] = 'Home Bottom Narrow';
+					$instance['photowidth'] = get_option('home_narrow_column');
 				}
-				foreach ($sidebartest["sidebar-5"] as $key => $value ) { 
-					if ($widget == $value) {
-						$instance['sidebarname'] = 'Home Sidebar'; 
-						$instance['photowidth'] = get_option('home_right_column');
-						}
+			}
+			foreach ($sidebartest["sidebar-4"] as $key => $value ) {
+				if (($widget == $value) && ($columnwidth == "even")) {
+					$instance['sidebarname'] = 'Home Bottom Right';
+					$instance['photowidth'] = get_option('home_center_column');
 				}
-				foreach ($sidebartest["sidebar-6"] as $key => $value ) { 
-					if ($widget == $value) {
-						$instance['sidebarname'] = 'Ads Sidebar';
-						$instance['photowidth'] = get_option('home_narrow_column');
-						} 
+				if (($widget == $value) && ($columnwidth == "wide")) {
+					$instance['sidebarname'] = 'Home Bottom Wide';
+					$instance['photowidth'] = get_option('home_wide_column');
 				}
+			}
+			foreach ($sidebartest["sidebar-5"] as $key => $value ) {
+				if ($widget == $value) {
+					$instance['sidebarname'] = 'Home Sidebar';
+					$instance['photowidth'] = get_option('home_right_column');
+				}
+			}
+			foreach ($sidebartest["sidebar-6"] as $key => $value ) {
+				if ($widget == $value) {
+					$instance['sidebarname'] = 'Ads Sidebar';
+					$instance['photowidth'] = get_option('home_narrow_column');
+				}
+			}
 
-		$categoryslug = cat_id_to_slug($instance['category']); $categoryname = cat_id_to_name($instance['category']);$customcolors=$instance['custom-colors'];
 
+			$categoryslug = cat_id_to_slug($instance['category']);
+			$categoryname = cat_id_to_name($instance['category']);
+			$customcolors = $instance['custom-colors'];
 
-			include(TEMPLATEPATH . "/widgetstyles.php"); ?>
+			?> <!--start of category loop and display--> <?php
 
-					<!--start of category loop and display-->
-			<?php if((!is_int($totalstories)) || ($totalstories==0)) $totalstories=1; $storydivider = $instance['number']+1; $count=0;	
-            query_posts('cat=' . $instance['category'] . '&showposts=' . $totalstories); if (have_posts()) : while (have_posts()) : the_post(); global $post; $count++; 
-            if ($count <= $instance['number']) {              
-				$homewidecolumn = get_option('home_wide_column');
-				if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home400"; }
-				else if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="permalink"; }
-				else if ((($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Right")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Left"))){ $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home280"; }
-				else if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Narrow")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home160"; }
-				else if ((($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Sidebar")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Non-Home Sidebar")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Sports Center Sidebar"))) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="permalink"; }
-				
-				if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; } 
-				else if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; } 
-				else if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Bottom Narrow")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; } 
-				else if ($instance['category-photo-size'] == "Small") { $photodisplaywidth = 120; $thumbnailsize="home120"; } 
-				
-				if (($instance['category-photo-size'] == "Medium") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = 200; $thumbnailsize="archive"; } 
-				else if (($instance['category-photo-size'] == "Medium") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = 200; $thumbnailsize="archive"; } 
-				else if ($instance['category-photo-size'] == "Medium") { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
-				
-				if ($photodisplaywidth=="") { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; } 
-				
-				if (($photodisplaywidth==get_option('home_right_column')) && ($instance['sidebarname']=="Home Sidebar")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('home_narrow_column')) && ($instance['sidebarname']=="Home Bottom Narrow")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('non_home_right_column')) && ($instance['sidebarname']=="Non-Home Sidebar")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('non_home_right_column')) && ($instance['sidebarname']=="Sports Center Sidebar")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('home_left_column')) && ($instance['sidebarname']=="Home Bottom Left")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('home_center_column')) && ($instance['sidebarname']=="Home Bottom Right")) { $marginkey = 3; }
-				if (($photodisplaywidth==get_option('home_wide_column')) && ($instance['sidebarname']=="Home Bottom Wide")) { $marginkey = 3; }
+			echo '<div class="widgetwrap">';
+			include(TEMPLATEPATH . "/widgetstyles.php");
 
-				$photocheck = 0; if (has_post_thumbnail()) $photocheck = 5; 
-				if (($marginkey != 3) && ($photocheck == 5)) { ?>
+			if ( ( !is_int( $totalstories ) ) || ( $totalstories == 0 ) ) $totalstories = 1;
+			$storydivider = $instance['number']+1;
+			$count=0;
+            query_posts('cat=' . $instance['category'] . '&showposts=' . $totalstories);
+			if (have_posts()) :
+				while (have_posts()) :
+					the_post();
+					global $post;
+					$count++;
+                    if ( $count <= $instance['number'] ) {
+						$homewidecolumn = get_option('home_wide_column');
+						if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home400"; }
+						else if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="permalink"; }
+						else if ((($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Right")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Left"))){ $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home280"; }
+						else if (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Bottom Narrow")) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="home160"; }
+						else if ((($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Home Sidebar")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Non-Home Sidebar")) || (($instance['category-photo-size'] == "Large") && ($instance['sidebarname'] == "Sports Center Sidebar"))) { $photodisplaywidth = $instance['photowidth']; $thumbnailsize="permalink"; }
 
-					<div class="catboxthumbnail" style="float:<?php echo $instance['category-photo-placement']; ?>; width: <?php echo $photodisplaywidth; ?>px !important; margin-<?php echo $instance['category-photo-placement']; ?>:0px;">
+						if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
+						else if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
+						else if (($instance['category-photo-size'] == "Small") && ($instance['sidebarname'] == "Home Bottom Narrow")) { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
+						else if ($instance['category-photo-size'] == "Small") { $photodisplaywidth = 120; $thumbnailsize="home120"; }
 
-				<?php } 
-						$photodisplaywidth-=2; ?>
-						
-<?php if (($instance['category-photo-size'] == "Large") && (has_post_thumbnail())) { $catimage =   wp_get_attachment_image_src( get_post_thumbnail_id(), 'home400'); ?><a href="<?php the_permalink(); ?>"><img src="<?php echo $catimage[0]; ?>" style="width:100%" class="catboxphoto" alt="<?php the_title(); ?>" /></a><?php }
+						if (($instance['category-photo-size'] == "Medium") && ($instance['sidebarname'] == "Home Bottom Wide")) { $photodisplaywidth = 200; $thumbnailsize="archive"; }
+						else if (($instance['category-photo-size'] == "Medium") && ($instance['sidebarname'] == "Home Main Column")) { $photodisplaywidth = 200; $thumbnailsize="archive"; }
+						else if ($instance['category-photo-size'] == "Medium") { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
 
-	else if (has_post_thumbnail()) 
-			{ the_post_thumbnail( $thumbnailsize, array('class' => 'catboxphoto'));} 
-						
-					
-					if ($instance['show-caption']==on) {
-                		$photographer=get_post_meta($post->ID, photographer, true); if ($photographer) { ?><p class="photocredit">Photo Credit: <?php echo $photographer; ?></p>
-                		<?php } 
-                    	$caption=get_post_meta($post->ID, caption, true); ?><p class="photocaption" style="padding-bottom:8px !important"><?php echo $caption; ?></p>
+						if ($photodisplaywidth == "") { $photodisplaywidth = get_option('home_narrow_column'); $thumbnailsize="home160"; }
+
+						if (($photodisplaywidth == get_option('home_right_column')) && ($instance['sidebarname']=="Home Sidebar")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('home_narrow_column')) && ($instance['sidebarname']=="Home Bottom Narrow")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('non_home_right_column')) && ($instance['sidebarname']=="Non-Home Sidebar")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('non_home_right_column')) && ($instance['sidebarname']=="Sports Center Sidebar")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('home_left_column')) && ($instance['sidebarname']=="Home Bottom Left")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('home_center_column')) && ($instance['sidebarname']=="Home Bottom Right")) { $marginkey = 3; }
+						if (($photodisplaywidth == get_option('home_wide_column')) && ($instance['sidebarname']=="Home Bottom Wide")) { $marginkey = 3; }
+
+						$photocheck = 0;
+	                    if (has_post_thumbnail()) $photocheck = 5;
+						if (($marginkey != 3) && ($photocheck == 5)) { ?>
+							<div class="catboxthumbnail" style="float:<?php echo $instance['category-photo-placement']; ?>; width: <?php echo $photodisplaywidth; ?>px !important; margin-<?php echo $instance['category-photo-placement']; ?>:0px;">
 						<?php }
-				if (($marginkey != 3) && ($photocheck == 5)) { ?></div><?php }
-			
+						$photodisplaywidth -= 2;
+	                    ?>
+
+						<?php if ( $instance['category-photo-size'] == "Large" && has_post_thumbnail() ) {
+		                    $catimage = wp_get_attachment_image_src( get_post_thumbnail_id(), 'home400' ); ?>
+	                        <a href="<?php the_permalink(); ?>">
+		                        <img src="<?php echo $catimage[0]; ?>" style="width:100%" class="catboxphoto" alt="<?php the_title(); ?>" />
+		                    </a>
+	                    <?php } else if (has_post_thumbnail()) {
+		                    the_post_thumbnail( $thumbnailsize, array('class' => 'catboxphoto'));
+	                    }
+						if ($instance['show-caption']=='on') {
+                		    $photographer=get_post_meta($post->ID, photographer, true); if ($photographer) { ?><p class="photocredit">Photo Credit: <?php echo $photographer; ?></p>
+                		    <?php }
+                    	    $caption=get_post_meta($post->ID, caption, true); ?><p class="photocaption" style="padding-bottom:8px !important"><?php echo $caption; ?></p>
+						<?php }
+						if (($marginkey != 3) && ($photocheck == 5)) { ?>
+							</div>
+						<?php }
+
 			$headlinesize = $instance['headline-size']; $headlineheight = floor($headlinesize * 1.5); ?>
 			<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>"><h3 class="homeheadline" style="font-size:<?php echo $headlinesize; ?>px; line-height:<?php echo $headlineheight; ?>px;"><?php the_title(); ?></h3></a>
-            <?php $writer = get_post_meta($post->ID, writer, true); if (($writer) && ($instance['show-writer']==on)) { ?><p class="writer"><?php snowriter(); ?></p> <?php } 
-  			$teaser = $instance['category-teaser']; 
+            <?php $writer = get_post_meta($post->ID, writer, true); if (($writer) && ($instance['show-writer']==on)) { ?><p class="writer"><?php snowriter(); ?></p> <?php }
+  			$teaser = $instance['category-teaser'];
   			if ($teaser) the_content_limit($teaser, "<span class='readmore'>read story</span>");
   			if (($instance['show-date']==on) || ((get_theme_mod('comments')=="Enable") && ($instance['show-comments']==on)) || (is_user_logged_in())) { ?><p class="datetime"><?php
             if ($instance['show-date']==on) { ?><?php the_time('F j, Y '); }
-            if (($instance['show-date']==on) && ((get_theme_mod('comments')=="Enable") && ($instance['show-comments']==on))) echo ' &bull; '; 
-            if ((get_theme_mod('comments')=="Enable") && ($instance['show-comments']==on)) { comments_popup_link(' 0 comments', ' 1 comment', ' % comments'); } 
-    		edit_post_link('Edit this story', ' &bull; ', ''); ?></p><?php } 
+            if (($instance['show-date']==on) && ((get_theme_mod('comments')=="Enable") && ($instance['show-comments']==on))) echo ' &bull; ';
+            if ((get_theme_mod('comments')=="Enable") && ($instance['show-comments']==on)) { comments_popup_link(' 0 comments', ' 1 comment', ' % comments'); }
+    		edit_post_link('Edit this story', ' &bull; ', ''); ?></p><?php }
     		?>
 
 			<?php if (($count >= 1) && ($count < $totalstories) && ($totalstories!=1)) { ?><?php if ($instance['dividing-line']==on) { ?><div class="storybottom"></div><?php } else { ?><div class="storybottomnoline"></div><?php } ?><?php } ?>
@@ -153,14 +172,14 @@ class sno_category extends WP_Widget {
 				<?php } else { ?>
 
 
-                  <?php if($instance['teaser-thumb']==on) { 
+                  <?php if($instance['teaser-thumb']==on) {
                   $thumbplacement=$instance['teaser-thumb-placement']; ?>
-                  
-<?php global $post; $feature_photo = get_post_meta($post->ID, feature_photo, true); if (has_post_thumbnail()) 
-			{ the_post_thumbnail( 'homethumb', array('class' => 'catboxthumb', 'style' => 'margin-bottom:10px; float:'.$thumbplacement.'; margin-'.$thumbplacement.':0px;'));} 
-	else if ($feature_photo) { ?><a href="<?php the_permalink(); ?>"><img src="<?php echo $feature_photo; ?>" class="catboxthumb" style="float:<?php echo $thumbplacement; ?>;margin-bottom:10px;margin-<?php echo $thumbplacement; ?>:0px;width:70px" /></a><?php } 
-	else 
-			{ global $wpdb; $attachment_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_parent = '$post->ID' AND post_status = 'inherit' AND post_type='attachment' ORDER BY post_date DESC LIMIT 1"); 
+
+<?php global $post; $feature_photo = get_post_meta($post->ID, feature_photo, true); if (has_post_thumbnail())
+			{ the_post_thumbnail( 'homethumb', array('class' => 'catboxthumb', 'style' => 'margin-bottom:10px; float:'.$thumbplacement.'; margin-'.$thumbplacement.':0px;'));}
+	else if ($feature_photo) { ?><a href="<?php the_permalink(); ?>"><img src="<?php echo $feature_photo; ?>" class="catboxthumb" style="float:<?php echo $thumbplacement; ?>;margin-bottom:10px;margin-<?php echo $thumbplacement; ?>:0px;width:70px" /></a><?php }
+	else
+			{ global $wpdb; $attachment_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_parent = '$post->ID' AND post_status = 'inherit' AND post_type='attachment' ORDER BY post_date DESC LIMIT 1");
 $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a href="<?php the_permalink(); ?>"><img src="<?php echo $attachment; ?>" class="catboxthumb" style="float:<?php echo $thumbplacement; ?>;margin-bottom:10px;margin-<?php echo $thumbplacement; ?>:0px;width:70px" /></a><?php } } ?>
 
 					<?php } ?>
@@ -168,10 +187,11 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 
                   <?php $teaser = $instance['headline-teaser']; if ($teaser) the_content_limit($teaser, "Read more &raquo;"); ?>
 				<div style="clear:both;margin-top:15px"></div>
-                 <?php }}        
+                 <?php }
+            }
 
         endwhile; else: endif;
-        
+
         if ($exitkey == 5) { ?></ul><?php $exitkey = 0; }
 
         if ($instance['view-all']==on) { ?>
@@ -185,15 +205,15 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 
 
 		<?php } ?>
-				
+
 <?php	}
-	
+
 
 		function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$instance['title'] = $new_instance['title'];
 		$instance['widget-style'] = $new_instance['widget-style'];
- 		$instance['custom-colors'] = ( isset( $new_instance['custom-colors'] ) ? on : "" );  
+ 		$instance['custom-colors'] = ( isset( $new_instance['custom-colors'] ) ? on : "" );
 		$instance['header-color'] = $new_instance['header-color'];
 		$instance['header-text'] = $new_instance['header-text'];
 		$instance['widget-border'] = $new_instance['widget-border'];
@@ -210,20 +230,20 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 		$instance['category-teaser'] = $new_instance['category-teaser'];
 		$instance['headline-teaser'] = $new_instance['headline-teaser'];
 		$instance['headline-size'] = $new_instance['headline-size'];
- 		$instance['show-writer'] = ( isset( $new_instance['show-writer'] ) ? on : "" );  
- 		$instance['show-date'] = ( isset( $new_instance['show-date'] ) ? on : "" );  
- 		$instance['show-comments'] = ( isset( $new_instance['show-comments'] ) ? on : "" );  
- 		$instance['show-caption'] = ( isset( $new_instance['show-caption'] ) ? on : "" );  
- 		$instance['view-all'] = ( isset( $new_instance['view-all'] ) ? on : "" );  
- 		$instance['teaser-thumb'] = ( isset( $new_instance['teaser-thumb'] ) ? on : "" );  
- 		$instance['teaser-date'] = ( isset( $new_instance['teaser-date'] ) ? on : "" );  
- 		$instance['dividing-line'] = ( isset( $new_instance['dividing-line'] ) ? on : "" );  
- 		$instance['headline-header'] = ( isset( $new_instance['headline-header'] ) ? on : "" );  
- 		$instance['bullet-list'] = ( isset( $new_instance['bullet-list'] ) ? on : "" );  
+ 		$instance['show-writer'] = ( isset( $new_instance['show-writer'] ) ? on : "" );
+ 		$instance['show-date'] = ( isset( $new_instance['show-date'] ) ? on : "" );
+ 		$instance['show-comments'] = ( isset( $new_instance['show-comments'] ) ? on : "" );
+ 		$instance['show-caption'] = ( isset( $new_instance['show-caption'] ) ? on : "" );
+ 		$instance['view-all'] = ( isset( $new_instance['view-all'] ) ? on : "" );
+ 		$instance['teaser-thumb'] = ( isset( $new_instance['teaser-thumb'] ) ? on : "" );
+ 		$instance['teaser-date'] = ( isset( $new_instance['teaser-date'] ) ? on : "" );
+ 		$instance['dividing-line'] = ( isset( $new_instance['dividing-line'] ) ? on : "" );
+ 		$instance['headline-header'] = ( isset( $new_instance['headline-header'] ) ? on : "" );
+ 		$instance['bullet-list'] = ( isset( $new_instance['bullet-list'] ) ? on : "" );
 		return $instance;
 	}
 
-	function form($instance) { 
+	function form($instance) {
 		$defaults = array( 'number' => '1', 'number-headlines' => '3', 'headline-size' => '18', 'category-photo-placement' => 'Left', 'category-photo-size' => 'Medium', 'border-thickness' => '1px','category-teaser' => '170','headline-teaser' => '0', 'show-writer' => 'on', 'view-all' => 'on', 'show-date' => 'on', 'show-comments' => 'on', 'show-caption' => '', 'teaser-date' => 'on', 'teaser-thumb' => 'on', 'teaser-thumb-placement' => 'Left', 'widget-style'=>get_theme_mod('widget-style'), 'bullet-list' => 'on', 'header-color' => get_theme_mod('accentcolor-header'), 'header-text' => '#ffffff', 'widget-border' => '#aaaaaa', 'widget-background' => '#eeeeee', 'border-thickness' => '1px' );
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 
@@ -253,19 +273,19 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 			<label for="<?php echo $this->get_field_id( 'category-photo-size' ); ?>">Photo Size</label>
 		<br />
 			<input class="checkbox" type="checkbox" <?php if ($instance['show-caption'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'show-caption' ); ?>" name="<?php echo $this->get_field_name( 'show-caption' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-caption' ); ?>">Show Caption</label>			
+			<label for="<?php echo $this->get_field_id( 'show-caption' ); ?>">Show Caption</label>
 		<br />
 
 			<input class="checkbox" type="checkbox" <?php if ($instance['show-writer'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'show-writer' ); ?>" name="<?php echo $this->get_field_name( 'show-writer' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-writer' ); ?>">Show Byline</label>			
+			<label for="<?php echo $this->get_field_id( 'show-writer' ); ?>">Show Byline</label>
 		<br />
 
 			<input class="checkbox" type="checkbox" <?php if ($instance['show-date'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'show-date' ); ?>" name="<?php echo $this->get_field_name( 'show-date' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-date' ); ?>">Show Date</label>			
+			<label for="<?php echo $this->get_field_id( 'show-date' ); ?>">Show Date</label>
 		<br />
 
 			<input class="checkbox" type="checkbox" <?php if ($instance['show-comments'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'show-comments' ); ?>" name="<?php echo $this->get_field_name( 'show-comments' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-comments' ); ?>">Show Comments Link?</label>			
+			<label for="<?php echo $this->get_field_id( 'show-comments' ); ?>">Show Comments Link?</label>
 		<br />
 
 			<select id="<?php echo $this->get_field_id( 'headline-size' ); ?>" name="<?php echo $this->get_field_name( 'headline-size' ); ?>">
@@ -293,7 +313,7 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 
 			<input class="checkbox" type="checkbox" <?php if ($instance['bullet-list'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'bullet-list' ); ?>" name="<?php echo $this->get_field_name( 'bullet-list' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'bullet-list' ); ?>"> Show as Bullet List</label><br />
-			
+
 			<input id="<?php echo $this->get_field_id('number-headlines'); ?>" name="<?php echo $this->get_field_name('number-headlines'); ?>" type="text" maxlength="1" size="1" value="<?php echo $instance['number-headlines']; ?>" />
 	        <label for="<?php echo $this->get_field_id('number-headlines'); ?>"><?php _e('Number of Extra Headlines'); ?></label><br />
 			<input id="<?php echo $this->get_field_id('headline-teaser'); ?>" name="<?php echo $this->get_field_name('headline-teaser'); ?>" type="text" maxlength="3" size="3" value="<?php echo $instance['headline-teaser']; ?>" />
@@ -307,14 +327,14 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 				<option value="right" <?php if ( 'right' == $instance['teaser-thumb-placement'] ) echo 'selected="selected"'; ?>>Right</option>
 			</select>
 			<label for="<?php echo $this->get_field_id( 'teaser-thumb-placement' ); ?>">Thumbnail Placement</label><br />
-			
+
 			<input class="checkbox" type="checkbox" <?php if ($instance['teaser-date'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'teaser-date' ); ?>" name="<?php echo $this->get_field_name( 'teaser-date' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'teaser-date' ); ?>"> Show Date</label><br />
 
 			<input class="checkbox" type="checkbox" <?php if ($instance['view-all'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'view-all' ); ?>" name="<?php echo $this->get_field_name( 'view-all' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'view-all' ); ?>"> Show "View All" Link</label>
 	     </p>
-		
+
 		</div>
 		<div style="float:left;width:210px">
 		<p style="font-weight:bold;text-decoration:underline;">Widget Appearance</p>
@@ -333,7 +353,7 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php if ($instance['custom-colors'] == on) echo checked; ?> id="<?php echo $this->get_field_id( 'custom-colors' ); ?>" name="<?php echo $this->get_field_name( 'custom-colors' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'custom-colors' ); ?>">Turn on Custom Widget Colors</label>			
+			<label for="<?php echo $this->get_field_id( 'custom-colors' ); ?>">Turn on Custom Widget Colors</label>
 		</p>
 		<p>Save this widget to make the color selector active.</p>
 <?php $number = $this->number; ?>
@@ -353,7 +373,7 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
       .each(function () { f.linkTo(this); jQuery(this).css('opacity', 0.75); })
       .focus(function() {
         if (selected) {
-          jQuery(selected).css('opacity', 0.75).removeClass('colorwell-selected');          
+          jQuery(selected).css('opacity', 0.75).removeClass('colorwell-selected');
         }
         f.linkTo(this);
         p.css('opacity', 1);
@@ -362,7 +382,7 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 
   });
 
- 
+
   jQuery(document).ready(function() {
     jQuery('#snocolorpickercat<?php echo $number; ?>').hide();
     jQuery('#snocolorpickercat<?php echo $number; ?>').farbtastic(".colorwellcat<?php echo $number; ?>");
@@ -387,7 +407,7 @@ $attachment = wp_get_attachment_url($attachment_id); if ($attachment) { ?><a hre
 			<label for="<?php echo $this->get_field_id( 'border-thickness' ); ?>"> Border Thickness</label>
 		</div>
 		<div style="clear:both"></div>
-	<?php 
+	<?php
 	}
 }
 ?>
