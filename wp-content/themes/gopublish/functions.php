@@ -306,6 +306,14 @@ function sno_css() {
 		.glossymenu a.menuitem .statusicon{ margin-right:10px; border: none; }
 		.glossymenu a.menuitem:hover { background-image: url(/wp-content/themes/gopublish/images/glossyback2.gif); }
 		.glossymenu div.submenu{ padding:10px 10px 10px 10px; background: #f5f5f5; }
+		h2:before {
+			content: "\f108";
+			display: inline-block;
+			-webkit-font-smoothing: antialiased;
+			font: normal 29px/1 "dashicons";
+			vertical-align: middle;
+			margin-right: 0.3em;
+			}
 	</style>';
 }
 
