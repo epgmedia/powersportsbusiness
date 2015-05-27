@@ -1,0 +1,96 @@
+#content_ptfeed_button span.mce_ptfeed_button img,
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button img,
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button img,
+#content_pttopics_button span.mce_pttopics_button img {	
+	height: 24px;
+}
+
+#content_ptfeed_button span.mce_ptfeed_button,
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button,
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button,
+#content_pttopics_button span.mce_pttopics_button,
+#content_pttweets_button span.mce_pttweets_button {
+	background-image: url("../img/shortcode-icons.png");
+	height: 21px;
+}
+
+#content_ptfeed_button,
+#content_ptfeed_button span.mce_ptfeed_button img,
+#content_ptfeed_button span.mce_ptfeed_button,
+#content_pttopics_button,
+#content_pttopics_button span.mce_pttopics_button img,
+#content_pttopics_button span.mce_pttopics_button { 
+	width: 54px;
+}
+
+#content_ptsavedsearch_button,
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button img,
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button { 
+	width: 58px;
+}
+
+#content_ptcuratedfeed_button,
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button img,
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button,
+#content_pttweets_button,
+#content_pttweets_button span.mce_pttweets_button img,
+#content_pttweets_button span.mce_pttweets_button { 
+	width: 62px;
+}
+
+#content_ptfeed_button span.mce_ptfeed_button { background-position: 0px -22px; }
+#content_ptfeed_button span.mce_ptfeed_button:hover { background-position: 0px 0px; }
+
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button { background-position: -168px -22px; }
+#content_ptcuratedfeed_button span.mce_ptcuratedfeed_button:hover { background-position: -168px 0px; } 
+
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button { background-position: -109px -22px; }
+#content_ptsavedsearch_button span.mce_ptsavedsearch_button:hover { background-position: -109px 0px; }
+
+#content_pttopics_button span.mce_pttopics_button { background-position: -55px -22px; }
+#content_pttopics_button span.mce_pttopics_button:hover { background-position: -55px 0px; }
+
+#content_pttweets_button span.mce_pttweets_button { background-position: -231px -22px; }
+#content_pttweets_button span.mce_pttweets_button:hover { background-position: -231px 0px; }
+
+span.asterisk { color: #FF0000; }
+
+.error {
+	border: 1px solid #CC0000;
+	background-color: #FFEBE8;
+	color: #333333;
+	margin: 5px 0 0 0;
+	padding: 5px !important;
+	font-weight: 700;
+	border-radius: 3px;
+	font-size: 13px;
+}
+
+select.error {
+	border: 1px solid #CC0000;
+	background-color: #FFEBE8;
+	color: #333333;
+	margin: 0;
+	padding: 3px 0 5px 0 !important;
+	font-weight: normal;
+	border-radius: 0px;
+	font-size: 10px;
+}
+
+#add-feed-dialog a.insert-shortcode { display: block; line-height: 24px; text-align: center; margin: 10px 0 0 0; float: right; padding: 0px 5px;}
+
+/* Shortcodes/Widgets popups layout */
+.automated-dialog p { padding: 10px 0px 0px 0px; margin: 0; }
+.automated-dialog p label { margin-right: 5px; font-size: 13px; }
+.automated-dialog p.wide label { width: 100%; }
+.automated-dialog select, .automated-dialog input[type=text] { padding: 3px 2px 5px 2px; font-size: 13px !important; }
+.automated-dialog p.wide select, .automated-dialog p.wide input[type=text] { width: 100%; }
+.automated-dialog input[type=text].error { border:1px solid #FF0000; }
+.automated-dialog a.topic-name-button { margin-top:4px; float:left; text-decoration:none; display: block; line-height: 24px; text-align: center; padding: 0px 5px; }
+.automated-dialog img.publishthis-ajax-img { visibility:hidden; position:relative; top:10px; left:5px; display:block; }
+.automated-dialog img.publishthis-ajax-img-inline { visibility:hidden; position:relative; top:2px; left:0px; display:inline; }
+.automated-dialog ul.automated_width, .automated-dialog ul.automated_width li { list-style: none; padding: 3px 0; font-size: 13px; }
+.automated-dialog ul.automated_width { margin: 0 0 5px 0; }
+.automated-dialog ul.automated_width li input[type=text] { margin-left: 0px; width: 50px; }
+.automated-dialog p.automated-title { font-size: 14px; font-weight: bold; margin: 10px 0 5px 0; }
+.automated-dialog hr { border: none; border-top: 1px solid #DFDFDF; }

@@ -1,0 +1,14 @@
+#adminmenu #toplevel_page_edit-post_type-publishthis_action div.wp-menu-image img {
+	background: url("../img/ico-default.png") no-repeat 40% 50%;
+	width: 20px;
+	height: 20px;
+	opacity: 1;
+}
+
+#adminmenu #toplevel_page_edit-post_type-publishthis_action.wp-menu-open div.wp-menu-image img {
+	background-image: url("../img/ico-active.png");
+}
+
+#adminmenu #toplevel_page_edit-post_type-publishthis_action.opensub div.wp-menu-image img {
+	background-image: url("../img/ico-hover.png");
+}

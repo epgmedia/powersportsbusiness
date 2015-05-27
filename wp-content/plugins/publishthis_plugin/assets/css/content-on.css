@@ -1,0 +1,48 @@
+div.pt-post-article div.pt-align-right {
+	float: right;
+}
+
+div.pt-post-article div.pt-align-left {
+	float: left;
+}
+
+div.pt-post-article div.pt-align-center {
+	text-align: center;
+}
+
+div.pt-post-article:after {
+	clear: both;
+}
+
+.pt-box iframe {
+	min-width: 50px !important;
+}
+
+.pt-automated {
+	margin: 0 0 0.2em 0; 
+}
+p.clear{
+ clear:both;	
+}
+
+.pt-spacer img { border: none; width: 1px; height: 1px; }
+
+.pt-annotation-title-h-right {
+	text-align: right;
+}
+
+.pt-annotation-title-h-left {
+	text-align: left;
+}
+
+.pt-annotation-title-v-top {
+	vertical-align: top;
+} 
+
+.pt-annotation-title-v-middle {
+	vertical-align: middle;
+}
+
+.pt-annotation-title-v-bottom {
+	vertical-align: bottom;
+}

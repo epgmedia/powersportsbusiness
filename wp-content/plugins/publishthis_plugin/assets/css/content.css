@@ -1,0 +1,117 @@
+.aligncenter, .center {text-align: center;margin: auto;margin-left: auto;}
+.alignright, .right {text-align: right;margin: auto;margin-left: auto;}
+.alignleft, .left {text-align: left;margin: auto;margin-left: auto;}
+.wp-caption.right {float: right;}
+.wp-caption.left {float: left;}
+.wp-caption.aligncenter p.wp-caption-text, .wp-caption.center p.wp-caption-text {width: 100%;text-align: center;}
+.wp-caption.alignright p.wp-caption-text, .wp-caption.right p.wp-caption-text {float: right;width: 100%;text-align: right;}
+.wp-caption.alignleft p.wp-caption-text, .wp-caption.left p.wp-caption-text {float: left;width: 100%;text-align: left;}
+
+.pt_image_caption{
+  width:100%;	
+}
+
+p.pt-curated-logo {
+	line-height: 1px;
+}
+
+#pt_curated_by {
+	clear: both; 
+	margin-left: auto; 
+	margin-right: auto; 
+	width: 100%;
+	padding: 10px 10px 0px 10px;
+}
+/*  */
+.entry-content #pt_curated_by {
+	width: 100%;
+}
+.entry-summary .wp-post-image{
+	float:left;
+	margin:0 10px 0 0;
+}
+.entry-content,
+.entry-summary{
+	padding:1em 0;
+	overflow:hidden;
+}
+.entry-summary p,
+.entry-content p,
+.pt_curated_by{margin:0 0 14px;}
+.entry-title{
+	line-height:normal;
+}
+.post .avatar{
+	overflow:hidden;
+	margin:0 0 20px;
+}
+.widget p{margin:0 0 14px;}
+.widget.topic-content-widget img{
+	float:left;
+	width:auto;
+	margin:0 5px 5px 0;
+}
+.wp-caption .wp-caption-text{
+	font-size:11px;
+	font-style:italic;
+	padding-left:0px;
+}
+.pt-automated .pt-annotation{
+	padding:10px;
+	font-weight:normal;
+	font-style:italic;
+	line-height:1.2;
+}
+#respond{
+	padding:2em 5% 3.5em;
+}
+#respond .form-submit{margin-right:5%;}
+.pt-box {
+	border:1px solid #ddd;
+	border-radius:5px;
+	padding:5px;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	margin:0 0 20px;
+	font-size:12px;
+	line-height:normal;
+	min-width: 100px;
+}
+.pt-box p { margin: 0 0 0.2em; }
+.pt-box .pt-imgcontent-link img{
+	border:1px solid #ddd;
+}
+.widget .pt-box {
+	border:0;
+	padding:0;
+}
+.pt-automated .pt-publishdate{
+	font-style:italic;
+	font-size:12px;
+}
+.widget-title{
+	text-transform:uppercase;
+	letter-spacing:0;
+	font-weight:normal;
+	font-size:12px;
+}
+.entry-meta{
+	font-size:11px;
+}
+
+.pt-two-column{
+	width:49%;	
+}
+.pt-three-column{
+	width:32%;	
+}
+.pt-four-column{
+	width:24%;	
+}
+.pt-five-column{
+	width:19%;	
+}
+.pt-video-defaultwidth {
+	width: 100%;
+}
