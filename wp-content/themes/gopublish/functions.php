@@ -2,29 +2,27 @@
 /**
  * Theme Functions
  */
+/** Includes */
+
+/** Other important parts */
+include( TEMPLATEPATH . '/tools/theme-options.php' );
+include( TEMPLATEPATH . "/tools/enews.php" );
+include( TEMPLATEPATH . "/tools/snotext.php" );
+include( TEMPLATEPATH . "/tools/audio.php" );
+include( TEMPLATEPATH . "/tools/video.php" );
+include( TEMPLATEPATH . "/tools/videoembed.php" );
+include( TEMPLATEPATH . "/tools/advertisement.php" );
+include( TEMPLATEPATH . "/tools/categorywidget.php" );
+include( TEMPLATEPATH . "/tools/productshowcase.php" );
+include( TEMPLATEPATH . "/tools/pagewidget.php" );
+/** Wallpaper Ads */
+include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
+
 
 add_action( 'after_setup_theme', 'gopublish_theme_setup' );
 
 function gopublish_theme_setup() {
 	/* Filters, actions, and theme-supported features. */
-
-	/** Includes */
-
-	/** Other important parts */
-	include( TEMPLATEPATH . '/tools/theme-options.php' );
-	include( TEMPLATEPATH . "/tools/enews.php" );
-	include( TEMPLATEPATH . "/tools/snotext.php" );
-	include( TEMPLATEPATH . "/tools/audio.php" );
-	include( TEMPLATEPATH . "/tools/video.php" );
-	include( TEMPLATEPATH . "/tools/videoembed.php" );
-	include( TEMPLATEPATH . "/tools/advertisement.php" );
-	include( TEMPLATEPATH . "/tools/categorywidget.php" );
-	include( TEMPLATEPATH . "/tools/productshowcase.php" );
-	include( TEMPLATEPATH . "/tools/pagewidget.php" );
-
-	/** Wallpaper Ads */
-	include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
-
 	/**
 	 * Theme options
 	 */
@@ -360,7 +358,7 @@ function add_admin_bar_link($wp_admin_bar) {
 	$class = 'epg-media-link';
 	$wp_admin_bar->add_menu( array(
 			'id' => 'epg-media-link',
-			'title' => __( 'EPG Media, LLC' ),
+			'title' => __( 'EPG Media, LLC Homepage' ),
 			'href' => __('http://www.epgmediallc.com'),
 
 		) );
