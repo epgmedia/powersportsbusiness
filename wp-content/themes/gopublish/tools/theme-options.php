@@ -444,7 +444,7 @@ function theme_settings_admin() { ?>
 											<option style="padding-right:10px;"
 											        value="Text" <?php selected( 'Text', get_theme_mod( 'header_blog_title' ) ); ?>><?php _e( "Use website name and tagline", 'sno' ); ?></option>
 											<option style="padding-right:10px;"
-											        value="Text" <?php selected( 'SubscribeAd', get_theme_mod( 'header_blog_title' ) ); ?>><?php _e( "Use Header and Sub Link", 'sno' ); ?></option>
+											        value="SubscribeAd" <?php selected( 'SubscribeAd', get_theme_mod( 'header_blog_title' ) ); ?>><?php _e( "Use Header and Sub Link", 'sno' ); ?></option>
 										</select>
 									</p>
 
