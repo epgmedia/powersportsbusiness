@@ -25,7 +25,7 @@ class epg_interstitial_ads {
 	    $this->dir_uri      = plugins_url( null, __FILE__ );
 
 	    $this->data['ad_position'] = '/35190362/' . $this->page_code_id;
-	    $this->data['position_tag'] = 'div-gpt-ad-1398116137114-0';
+	    $this->data['position_tag'] = 'interstitial_ad_pos';
 
 	    add_action( 'admin_init', array( $this, 'setting_init' ) );
 	    add_action( 'wp_enqueue_scripts', array($this, 'scripts_and_styles') );
@@ -45,7 +45,7 @@ class epg_interstitial_ads {
 			false
 		);
 
-		wp_localize_script( 'epg_interstitial_ad', 'ad_data', $this->data );
+		wp_localize_script( 'epg_interstitial_ad', 'interstitial_ad', $this->data );
 		wp_enqueue_script( 'epg_interstitial_ad' );
 
 	}
