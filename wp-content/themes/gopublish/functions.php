@@ -2,21 +2,19 @@
 /**
  * Theme Functions
  */
-/** Includes */
-
-/** Other important parts */
-include( TEMPLATEPATH . '/tools/theme-options.php' );
-include( TEMPLATEPATH . "/tools/enews.php" );
-include( TEMPLATEPATH . "/tools/snotext.php" );
-include( TEMPLATEPATH . "/tools/audio.php" );
-include( TEMPLATEPATH . "/tools/video.php" );
-include( TEMPLATEPATH . "/tools/videoembed.php" );
-include( TEMPLATEPATH . "/tools/advertisement.php" );
-include( TEMPLATEPATH . "/tools/categorywidget.php" );
-include( TEMPLATEPATH . "/tools/productshowcase.php" );
-include( TEMPLATEPATH . "/tools/pagewidget.php" );
+/* Includes */
+include 'tools/theme-options.php';
+include 'tools/enews.php';
+include 'tools/snotext.php';
+include 'tools/audio.php';
+include 'tools/video.php';
+include 'tools/videoembed.php';
+include 'tools/advertisement.php';
+include 'tools/categorywidget.php';
+include 'tools/productshowcase.php';
+include 'tools/pagewidget.php';
 /** Wallpaper Ads */
-include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
+// include( TEMPLATEPATH . '/tools/wallpaper-ad.php' );
 
 
 add_action( 'after_setup_theme', 'gopublish_theme_setup' );
@@ -202,6 +200,9 @@ function after_header() {
 }
 
 function my_admin_bar_menu() {
+	/**
+	 * @var $wp_admin_bar WP_Admin_Bar
+	 */
 	global $wp_admin_bar;
 	if ( !is_user_logged_in() || !is_admin_bar_showing() )
 		return;
@@ -239,38 +240,6 @@ function my_admin_bar_menu() {
 			'title' => __( 'Logout'),
 			'href' => wp_logout_url( home_url() ) ) );
 }
-
-function sno_dashboard_widget() {
-	// Display whatever it is you want to show
-	echo '<div class="alignright browser-icon" style="margin-top:-30px;"><a href="http://schoolnewspapersonline.com"><img src="/wp-content/themes/gopublish/images/sno130.png" alt="" /></a></div>';
-	include_once(ABSPATH.WPINC.'/rss.php'); // path to include script
-	$feed = fetch_rss('http://sno.zendesk.com/forums/189190-announcements/posts.rss'); // specify feed url
-	$items = array_slice($feed->items, 0, 2); // specify first and last item
-	if (!empty($items)) :
-		foreach ($items as $item) :
-			echo '<a style="font-size:15px;line-height:22px;" href="'.$item["link"].'">'.$item["title"].'</a><span style="margin-left:5px;font-size:10px;color:#666666;">'.date("F j, Y", strtotime($item["pubdate"])).'</span>';
-			$content = $item['description']; $content = apply_filters('the_content', $content); $content = str_replace(']]>', ']]&gt;', $content); $content = strip_tags($content);
-			if ((strlen($content)>350) && ($espacio = strpos($content, " ", 350 ))) {
-				$content = substr($content, 0, $espacio); $content = $content;
-				echo "<p style='margin-top:3px;font-size:12px;line-height:18px'>".$content."...&nbsp;<a href='".$item['link']."'>Read More</a>"."</p>";
-			} else {
-				echo "<p>".$content."</p>";
-			}
-		endforeach;
-	endif; ?>
-	<br />
-	<p style="font-size:16px;margin:0px;">About This Site</p>
-	<p style="margin-top:3px"><?php
-		$theme_data = get_theme_data(ABSPATH . 'wp-content/themes/gopublish/style.css');
-		echo $theme_data['Author']; ?> <?php
-		echo $theme_data['Name']; ?> Version <?php
-		echo $theme_data['Version']; ?>
-		<br />Powered by WordPress Version <?php bloginfo('version'); ?></p>
-	<p style="font-size:16px;margin:0px;"><a target="_blank" href="http://schoolnewspapersonline.com/instruction-manual-4-2/">Instruction Manual</a></p>
-	<p style="font-size:16px;margin:0px;"><a target="_blank" href="http://sno.zendesk.com/">Submit a Support Request</a></p>
-<?php
-}
-
 function sno_add_dashboard_widgets() {
 	wp_add_dashboard_widget('sno_announcements', 'GoPublish News & Announcements', 'sno_dashboard_widget');
 	global $wp_meta_boxes;
@@ -345,6 +314,9 @@ function sno_thickbox_script() {
 }
 
 function remove_admin_bar_links() {
+	/**
+	 * @var $wp_admin_bar WP_Admin_Bar
+	 */
 	global $wp_admin_bar;
 	$wp_admin_bar->remove_menu('new-content');
 	$wp_admin_bar->remove_menu('updates');
@@ -352,24 +324,25 @@ function remove_admin_bar_links() {
 	$wp_admin_bar->remove_menu('wp-logo');
 }
 
-
-
-function add_admin_bar_link($wp_admin_bar) {
+/**
+ * @var $wp_admin_bar WP_Admin_Bar
+ */
+function add_admin_bar_link( $wp_admin_bar ) {
 	$class = 'epg-media-link';
 	$wp_admin_bar->add_menu( array(
-			'id' => 'epg-media-link',
+			'id' => $class,
 			'title' => __( 'EPG Media, LLC Homepage' ),
 			'href' => __('http://www.epgmediallc.com'),
 
 		) );
 	$wp_admin_bar->add_menu( array(
-			'parent' => 'epg-media-link',
+			'parent' => $class,
 			'id' => 'epg-media-time-off',
 			'title' => __( 'Time Off Request' ),
 			'href' => __('http://www.epgmediallc.com/time-off-request/'),
 		) );
 	$wp_admin_bar->add_menu( array(
-			'parent' => 'epg-media-link',
+			'parent' => $class,
 			'id' => 'epg-media-support',
 			'title' => __( 'IT Request' ),
 			'href' => __('http://www.epgmediallc.com/it-request/'),
@@ -377,8 +350,7 @@ function add_admin_bar_link($wp_admin_bar) {
 
 }
 
-
-function my_post_image_html( $html, $post_id, $post_image_id ) {
+function my_post_image_html( $html, $post_id ) {
 	global $post;
 	$customlink = get_post_meta($post->ID, 'customlink', true);
 	$click      = get_post_meta($post->ID, 'click_tracker_code', true);
@@ -394,38 +366,32 @@ function my_post_image_html( $html, $post_id, $post_image_id ) {
 	return $html;
 }
 
-/** turns a category ID to a Name */
+/* turns a category ID to a Name */
 function cat_id_to_name( $id ) {
 	foreach( get_categories() as $category ) {
 		if ( $id == $category->cat_ID ) {
 
 			return $category->cat_name;
-			break;
 		}
 	}
+
+	return null;
 }
 
-/** turns a category ID to a Slug */
+/* turns a category ID to a Slug */
 function cat_id_to_slug( $id ) {
 	foreach( get_categories() as $category ) {
 		if ( $id == $category->cat_ID ) {
 
 			return $category->category_nicename;
-			break;
 		}
 	}
+
+	return null;
 }
 
-/** turns a page ID to a Name */
-function page_id_to_name($id) {
-	global $page;
-	if ( $id == $page->page_ID ) {
-		return $page->page_name;
-	}
-}
-
-function the_content_limit($max_char, $more_link_text = '(more...)', $stripteaser = 0, $more_file = '') {
-	$content = get_the_content($more_link_text, $stripteaser, $more_file);
+function the_content_limit($max_char, $more_link_text = '(more...)', $stripteaser = 0) {
+	$content = get_the_content( $more_link_text, $stripteaser );
 	$content = apply_filters('the_content', $content);
 	$content = str_replace(']]>', ']]&gt;', $content);
 	$content = strip_tags($content);
@@ -454,7 +420,8 @@ function the_content_limit($max_char, $more_link_text = '(more...)', $striptease
 
 function snowriter() {
 	global $post;
-	$writer = get_post_meta($post->ID, writer, true); $jobtitle = get_post_meta($post->ID, jobtitle, true);
+	$writer = get_post_meta($post->ID, 'writer', true);
+	$jobtitle = get_post_meta($post->ID, 'jobtitle', true);
 	if ($writer != "") {
 		$args = array( 'meta_key' => 'name', 'meta_value' => $writer, 'numberposts' => 1 );
 		$queried_posts = get_posts( $args );
