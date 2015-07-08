@@ -110,7 +110,11 @@ ajaxManager.run();
       return false;
     });
     
-  })
+    if($.fn.selectBox) {
+       $("#shipping_country_code, #shipping_method_id, #live_rates, #widget_shipping_method_id, #widget_shipping_country_code, .Cart66CountrySelect, #widget_live_rates, .cart66Options").selectBox();
+    }
+    
+  });
 })(jQuery);
 
 function getCartButtonFormData(formId) {

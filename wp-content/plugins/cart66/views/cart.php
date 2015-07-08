@@ -185,7 +185,7 @@ if($cartImgPath) {
               $removeItemImg = $cartImgPath . 'remove-item.png';
             }
           ?>
-        <td <?php if($item->hasAttachedForms()) { echo "class=\"noBottomBorder\""; } ?>>
+        <td class="cart66-align-center" <?php if($item->hasAttachedForms()) { echo "class=\"noBottomBorder\""; } ?>>
           
           <?php if($item->isSubscription() || $item->isMembershipProduct() || $product->is_user_price==1): ?>
             <span class="subscriptionOrMembership"><?php echo $item->getQuantity() ?></span>
@@ -301,7 +301,7 @@ if($cartImgPath) {
       <?php  else: ?>
         <?php if(count($shippingMethods) > 1 && $fullMode): ?>
         <tr>
-          <th colspan="4" class="alignRight"><?php _e( 'Shipping Method' , 'cart66' ); ?>: &nbsp;
+          <th colspan="4" class="alignRight"><div class="shipping_label"><?php _e( 'Shipping Method' , 'cart66' ); ?>: &nbsp;</div>
             <?php if(Cart66Setting::getValue('international_sales')): ?>
               <select name="shipping_country_code" id="shipping_country_code">
                 <?php
@@ -357,7 +357,7 @@ if($cartImgPath) {
     <tr class="subtotal">
       <?php if($fullMode): ?>
       <td>&nbsp;</td>
-      <td>
+      <td class="cart66-align-center">
         <?php if($cartImgPath && Cart66Common::urlIsLIve($updateTotalImg)): ?>
           <input class="Cart66UpdateTotalButton" type="image" src="<?php echo $updateTotalImg ?>" value="<?php _e( 'Update Total' , 'cart66' ); ?>" name="updateCart"/>
         <?php else: ?>

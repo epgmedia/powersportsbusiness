@@ -3,6 +3,7 @@
 	http://wordpress3.3/wp-content/plugins/cart66-gh/js/cart66.css
 	http://wordpress3.3/wp-content/plugins/cart66/js/cart66.css
 */
+#Cart66Thickbox>img {width:133px;height:22px;padding:0px}
 
 #cart66 div.panel_wrapper{
 	display:block;
@@ -112,9 +113,6 @@ a.Cart66ButtonSecondary {
 	height: 12px !important;
 	background-image: url(../images/cart66_admin_button.png);
 	background-repeat: no-repeat;	
-}
-#wp-admin-bar-cart66.hover .cart66AdminBarIcon{
-	background-image: url(../images/cart66_tiny_type.png);
 }
 
 .pagination {

@@ -440,6 +440,6 @@ if(count($errors)) {
           <input id="Cart66CheckoutButton" class="confirm-order Cart66ButtonPrimary Cart66CompleteOrderButton" type="submit"  value="<?php _e( 'Complete Order' , 'cart66' ); ?>" name="Complete Order"/>
         <?php endif; ?>
 
-        <p class="description"><?php _e( 'Your receipt will be on the next page and also immediately emailed to you. <strong>We respect your privacy!</strong>' , 'cart66' ); ?></p>
+        <p class="description"><?php _e( 'Your receipt will be on the next page and also immediately emailed to you.<br> <strong>We respect your privacy!</strong>' , 'cart66' ); ?></p>
       </div>
 </form>

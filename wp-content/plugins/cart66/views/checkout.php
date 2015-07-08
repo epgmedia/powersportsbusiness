@@ -385,7 +385,8 @@ $checkout_data = array(
   'text_state' => __('State', 'cart66'),
   'text_zip_code' => __('Zip code', 'cart66'),
   'text_post_code' => __('Post code', 'cart66'),
-  'text_province' => __('Province', 'cart66')
+  'text_province' => __('Province', 'cart66'),
+  'use_selectbox' => (Cart66Setting::getValue('enhanced_cart_css')) ? true : "false",
 );
 
 $path = CART66_URL . '/js/checkout.js';
