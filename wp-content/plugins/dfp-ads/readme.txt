@@ -1,6 +1,6 @@
 === DFP Ad Manager ===
 
-Stable tag: 0.2.4
+Stable tag: 0.3.2
 Contributors: chriswgerber
 Requires at least: 3.0.0
 Tested up to: 4.2.2
@@ -54,30 +54,53 @@ Submit your questions at [chriswgerber.com/contact/](http://www.chriswgerber.com
 
 == Upgrade Notice ==
 
-There was an issue in the build process that has been fixed. Please upgrade immediately.
+Update fixes issue with widget rendering.
 
 == Changelog ==
 
-= 0.2.4
+= 0.3.2 =
+
+* Adds `DFP_CONCAT_SCRIPTS` constant. Set as `false` to force the plugin to use un-minified scripts
+* Fixes array issue in javascript that would cause ads to not appear.
+* Improves build scripts
+* Adds Composer.lock file to force support for PHP 5.3 on all `composer install`
+* Various code quality improvements.
+
+= 0.3.1 =
+
+* Bugfix - Widget not displays ad position correctly.
+* Enhancement - Various code quality improvements.
+
+= 0.3.0 =
+
+* New - Adds option to turn off asynchronous loading.
+* Enhancement - Adds class `dfp_ad_pos` to ad tags.
+* Bugfix - Fixes shortcode issue where content would always appear at the top of the content area.
+
+= 0.2.5 =
+
+* Bugfix- Ad CPT was overriding page meta. Fix implemented resets post data after use of WP_Query.
+
+= 0.2.4 =
 
 * Fixes build
 
-= 0.2.3
+= 0.2.3 =
 
 * Bug fix
 
-= 0.2.2
+= 0.2.2 =
 
 * Fixed issue where settings were not being called.
 
-= 0.2.1
+= 0.2.1 =
 
 * Bug Fix: Added extra check to make sure plugin didn't attempt to add other CPTs as ad positions.
 * Enhancement: Added linting and uglifying to JS. Now serving minified JS.
 * Enhancement: Updated directory structure
 * Enhancement: Updated Readme to include screenshots and more information.
 
-= 0.2.0
+= 0.2.0 =
 
 * Added functionality for importing DFP Ads
 * Added Travis CI Integration.
@@ -88,5 +111,6 @@ There was an issue in the build process that has been fixed. Please upgrade imme
 * Added Asynchronous ad loading
 * Made plugin compatible with PHP 5.3
 
-= 0.1.0
+= 0.1.0 =
+
 * Initial Pre-Release

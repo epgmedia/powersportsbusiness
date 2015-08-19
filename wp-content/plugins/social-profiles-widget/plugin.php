@@ -6,7 +6,7 @@
 	Author: Nathan Rice
 	Author URI: http://www.nathanrice.net/
 
-	Version: 1.2.1
+	Version: 1.2.2
 
 	License: GNU General Public License v2.0
 	License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -29,9 +29,9 @@ function social_profiles_widget_register() {
 if ( !class_exists('Social_Profiles_Widget') ) {
 class Social_Profiles_Widget extends WP_Widget {
 
-	function Social_Profiles_Widget() {
+	function __construct() {
 		$widget_ops = array( 'classname' => 'social-profiles', 'description' => __('Displays Social Profile links as icons', 'spw') );
-		$this->WP_Widget( 'socialprofiles', __('Social Profiles', 'spw'), $widget_ops );
+		parent::__construct( 'socialprofiles', __('Social Profiles', 'spw'), $widget_ops );
 	}
 
 	var $plugin_imgs_url;
